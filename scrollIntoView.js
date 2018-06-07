@@ -187,7 +187,7 @@ export const injectScrollIntoViewAPI = WrappedComp => {
 };
 
 
-export class ScrollIntoViewContainer extends React.Component {
+class ScrollIntoViewBaseContainer extends React.Component {
 
   static propTypes = {
     // if enabled, will scrollIntoView on mount + on update (if it was previously disabled)
@@ -249,5 +249,5 @@ export class ScrollIntoViewContainer extends React.Component {
 }
 
 
-export const ScrollIntoView = injectScrollIntoViewAPI(ScrollIntoViewContainer);
+export const ScrollIntoView = injectScrollIntoViewAPI(ScrollIntoViewBaseContainer);
 

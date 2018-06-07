@@ -1,5 +1,5 @@
 {
-  "name": "examples",
+  "name": "react-native-scroll-into-view-examples",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
@@ -22,7 +22,7 @@
     "expo": "^27.0.1",
     "react": "16.3.1",
     "react-native": "~0.55.2",
-    "react-native-scroll-into-view": "^0.0.2",
+    "react-native-scroll-into-view": "^0.0.3",
     "react-navigation": "^2.2.3"
   }
 }
