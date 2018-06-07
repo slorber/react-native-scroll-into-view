@@ -77,9 +77,16 @@ class MyScreen extends React.Component {
 }
 ```
 
-# Examples:
+# Demos:
+
+You can run the examples folder as an Expo app with `yarn start`
 
 ![Basic example](https://media.giphy.com/media/5YqZVwlJeISATCyTOI/giphy.gif)
 
 ![Scroll to next example](https://media.giphy.com/media/4KFxkZyoFfxPEOBw0S/giphy.gif)
 
+# License
+
+MIT
+
+Some code is inspired from contribution of @sebasgarcep of an initial scrollIntoView support for https://github.com/APSL/react-native-keyboard-aware-scroll-view
