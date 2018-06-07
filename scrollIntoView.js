@@ -87,6 +87,7 @@ export const ScrollIntoViewWrapper = ScrollViewComp => {
     constructor(props) {
       super(props);
       this.scrollViewRef = React.createRef();
+      this.scrollY = this.props.contentOffset ? this.props.contentOffset.y : 0;
     }
 
     handleRef = ref => {
