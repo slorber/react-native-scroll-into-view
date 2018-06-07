@@ -100,6 +100,9 @@ The ES6 named exports are:
 
 You can run the examples folder as an Expo app with `yarn start`
 
+It is also [published on Expo](https://expo.io/@slorber/react-native-scroll-into-view)
+
+
 ![Basic example](https://media.giphy.com/media/5YqZVwlJeISATCyTOI/giphy.gif)
 
 ![Scroll to next example](https://media.giphy.com/media/4KFxkZyoFfxPEOBw0S/giphy.gif)
