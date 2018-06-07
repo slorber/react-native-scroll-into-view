@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, UIManager, findNodeHandle } from "react-native";
+import {View, UIManager, findNodeHandle} from "react-native";
 
 
 const {
@@ -11,8 +11,8 @@ const {
 
 const defaultGetScrollPosition = (
   scrollViewLayout,
-    viewLayout,
-    scrollY
+  viewLayout,
+  scrollY
 ) => {
   const scrollViewHeight = scrollViewLayout.height;
   const childHeight = viewLayout.height;
@@ -20,11 +20,11 @@ const defaultGetScrollPosition = (
   const childTopY = viewLayout.y - scrollViewLayout.y;
   const childBottomY = childTopY + childHeight;
   // ChildView top is above ScrollView: align child top to scrollview top
-  if ( childTopY < 0 ) {
+  if (childTopY < 0) {
     return (scrollY + childTopY)
   }
   // ChildView bottom is under ScrollView: align child bottom to scroll
-  else if ( childBottomY > scrollViewHeight ) {
+  else if (childBottomY > scrollViewHeight) {
     return (scrollY + childBottomY - scrollViewHeight)
   }
   // In other cases, let scroll position unchanged
@@ -40,10 +40,10 @@ const defaultMeasureElement = async (element) => {
 
   return new Promise(resolve => {
     UIManager.measureInWindow(node, (x, y, width, height) => {
-    const layout = { x, y, width, height };
-  resolve(layout)
-})
-})
+      const layout = {x, y, width, height};
+      resolve(layout)
+    })
+  })
 };
 
 const DefaultOptions = {
@@ -53,15 +53,15 @@ const DefaultOptions = {
 };
 
 
-const scrollIntoView = async (scrollView,view,scrollY,options) => {
+const scrollIntoView = async (scrollView, view, scrollY, options) => {
   const {
-      animated,
-      getScrollPosition,
-      measureElement
-    } = {
-      ...DefaultOptions,
+    animated,
+    getScrollPosition,
+    measureElement
+  } = {
+    ...DefaultOptions,
     ...options
-};
+  };
 
   const [
     scrollViewLayout,
@@ -71,11 +71,10 @@ const scrollIntoView = async (scrollView,view,scrollY,options) => {
     measureElement(view),
   ]);
 
-  const y = getScrollPosition(scrollViewLayout,viewLayout,scrollY);
+  const y = getScrollPosition(scrollViewLayout, viewLayout, scrollY);
 
-  scrollView.getScrollResponder().scrollResponderScrollTo({ x: 0, y, animated });
+  scrollView.getScrollResponder().scrollResponderScrollTo({x: 0, y, animated});
 };
-
 
 
 export const ScrollIntoViewWrapper = ScrollViewComp => {
@@ -84,6 +83,7 @@ export const ScrollIntoViewWrapper = ScrollViewComp => {
       // in case you use a custom ScrollView implementation which use a ref prop like "innnerRef"...
       refPropName: "ref",
     };
+
     constructor(props) {
       super(props);
       this.scrollViewRef = React.createRef();
@@ -91,100 +91,99 @@ export const ScrollIntoViewWrapper = ScrollViewComp => {
     }
 
     handleRef = ref => {
-    // Temporary, see https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/263
-    this.scrollViewRef.current = ref;
-  };
+      // Temporary, see https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/263
+      this.scrollViewRef.current = ref;
+    };
 
-  handleScroll = e => {
-    this.scrollY = e.nativeEvent.contentOffset.y;
-    this.props.onScroll && this.props.onScroll(e);
-  };
+    handleScroll = e => {
+      this.scrollY = e.nativeEvent.contentOffset.y;
+      this.props.onScroll && this.props.onScroll(e);
+    };
 
-  getScrollY = () => this.scrollY;
+    getScrollY = () => this.scrollY;
 
-  render() {
-    const { children, ...props } = this.props;
-    const scrollViewProps = {
+    render() {
+      const {children, ...props} = this.props;
+      const scrollViewProps = {
         ...props,
-      [this.props.refPropName]: this.handleRef,
-      onScroll: this.handleScroll,
-  };
-    return (
-      <ScrollViewComp
-    {...scrollViewProps}
-  >
-  <ScrollIntoViewProvider
-    scrollViewRef={this.scrollViewRef}
-    getScrollY={this.getScrollY}
-  >
-    {children}
-  </ScrollIntoViewProvider>
-    </ScrollViewComp>
-  );
+        [this.props.refPropName]: this.handleRef,
+        onScroll: this.handleScroll,
+      };
+      return (
+        <ScrollViewComp
+          {...scrollViewProps}
+        >
+          <ScrollIntoViewProvider
+            scrollViewRef={this.scrollViewRef}
+            getScrollY={this.getScrollY}
+          >
+            {children}
+          </ScrollIntoViewProvider>
+        </ScrollViewComp>
+      );
+    }
   }
-}
+
   ScrollIntoViewWrapper.displayName = `ScrollIntoViewWrapper(${ScrollViewComp.displayName || ScrollViewComp.name || 'Component'})`;
   return ScrollIntoViewWrapper;
 };
 
 
-
-
 class ScrollIntoViewAPI {
-  constructor(scrollViewRef,getScrollY) {
-    if ( !scrollViewRef ) {
+  constructor(scrollViewRef, getScrollY) {
+    if (!scrollViewRef) {
       throw new Error("scrollViewRef is required");
     }
-    if ( !getScrollY ) {
+    if (!getScrollY) {
       throw new Error("getScrollY is required");
     }
     this.scrollViewRef = scrollViewRef;
     this.getScrollY = getScrollY;
   }
+
   get = () => {
-  if (!this.scrollViewRef.current) {
-  throw new Error("scrollViewRef not available, make sure to use CustomScrollView as a parent");
-}
-return this.scrollViewRef.current
-};
-scrollIntoView = (view,options) => {
-  const scrollView = this.get();
-  const scrollY = this.getScrollY();
-  return scrollIntoView(scrollView,view,scrollY,options);
-};
+    if (!this.scrollViewRef.current) {
+      throw new Error("scrollViewRef not available, make sure to use CustomScrollView as a parent");
+    }
+    return this.scrollViewRef.current
+  };
+
+  scrollIntoView = (view, options) => {
+    const scrollView = this.get();
+    const scrollY = this.getScrollY();
+    return scrollIntoView(scrollView, view, scrollY, options);
+  };
 }
 
 export class ScrollIntoViewProvider extends React.Component {
   constructor(props) {
     super(props);
-    this.api = new ScrollIntoViewAPI(props.scrollViewRef,props.getScrollY);
+    this.api = new ScrollIntoViewAPI(props.scrollViewRef, props.getScrollY);
   }
+
   render() {
     return (
       <ReactProvider value={this.api}>
-    {this.props.children}
-  </ReactProvider>
-  );
+        {this.props.children}
+      </ReactProvider>
+    );
   }
 }
 
 export const ScrollIntoViewConsumer = ReactConsumer;
 
 
-
-
-
 export const injectScrollIntoViewAPI = WrappedComp => {
   return React.forwardRef((props, ref) => (
     <ReactConsumer>
-    {scrollIntoViewAPI => (
-    <WrappedComp
-  ref={ref} {...props}
-  scrollIntoViewAPI={scrollIntoViewAPI}
-  />
-)}
-</ReactConsumer>
-));
+      {scrollIntoViewAPI => (
+        <WrappedComp
+          ref={ref} {...props}
+          scrollIntoViewAPI={scrollIntoViewAPI}
+        />
+      )}
+    </ReactConsumer>
+  ));
 };
 
 
@@ -208,7 +207,7 @@ export class ScrollIntoViewContainer extends React.Component {
     // see https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/259#issuecomment-392863157
     setTimeout(() => {
       this.props.enabled && this.scrollIntoView();
-  }, 0);
+    }, 0);
   }
 
   componentDidUpdate(prevProps) {
@@ -230,23 +229,23 @@ export class ScrollIntoViewContainer extends React.Component {
   }
 
   scrollIntoView = () => {
-  if (this.unmounted) {
-  return;
-}
-this.props.scrollIntoViewAPI.scrollIntoView(this.container);
-};
+    if (this.unmounted) {
+      return;
+    }
+    this.props.scrollIntoViewAPI.scrollIntoView(this.container);
+  };
 
-render() {
-  return (
-    <View
-  {...this.props}
-  ref={ref => this.container = ref}
-  collapsable={false} // See https://github.com/facebook/react-native/issues/3282#issuecomment-201934117
-    >
-    {this.props.children}
-</View>
-);
-}
+  render() {
+    return (
+      <View
+        {...this.props}
+        ref={ref => this.container = ref}
+        collapsable={false} // See https://github.com/facebook/react-native/issues/3282#issuecomment-201934117
+      >
+        {this.props.children}
+      </View>
+    );
+  }
 }
 
 
