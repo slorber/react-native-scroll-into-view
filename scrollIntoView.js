@@ -82,6 +82,7 @@ export const ScrollIntoViewWrapper = ScrollViewComp => {
     static defaultProps = {
       // in case you use a custom ScrollView implementation which use a ref prop like "innnerRef"...
       refPropName: "ref",
+      scrollEventThrottle: 16,
     };
 
     constructor(props) {
@@ -196,7 +197,7 @@ class ScrollIntoViewBaseContainer extends React.Component {
     scrollIntoViewKey: PropTypes.string
   };
   static defaultProps = {
-    enabled: true
+    enabled: true,
   };
 
   constructor(props) {
