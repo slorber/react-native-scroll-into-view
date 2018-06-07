@@ -132,7 +132,7 @@ class ScrollToNextScreen extends React.Component {
             <Centered
               key={`Item_${index}`}
               style={{
-                marginTop: 500,
+                marginTop: 800,
                 width: "100%",
               }}
             >
