@@ -34,10 +34,7 @@ const defaultGetScrollPosition = (
 };
 
 const defaultMeasureElement = async (element) => {
-  //console.debug("defaultMeasureElement",element);
   const node = findNodeHandle(element);
-  //console.debug("defaultMeasureElement node",node);
-
   return new Promise(resolve => {
     UIManager.measureInWindow(node, (x, y, width, height) => {
       const layout = {x, y, width, height};
@@ -194,10 +191,13 @@ class ScrollIntoViewBaseContainer extends React.Component {
     // if enabled, will scrollIntoView on mount + on update (if it was previously disabled)
     enabled: PropTypes.bool.isRequired,
     // if enabled, will scrollIntoView on key change
-    scrollIntoViewKey: PropTypes.string
+    scrollIntoViewKey: PropTypes.string,
+    // weither to use animation to scroll into view the element
+    animated: PropTypes.bool.isRequired,
   };
   static defaultProps = {
     enabled: true,
+    animated: true,
   };
 
   constructor(props) {
@@ -233,7 +233,8 @@ class ScrollIntoViewBaseContainer extends React.Component {
     if (this.unmounted) {
       return;
     }
-    this.props.scrollIntoViewAPI.scrollIntoView(this.container);
+    const options = {animated: this.props.animated};
+    this.props.scrollIntoViewAPI.scrollIntoView(this.container,options);
   };
 
   render() {
