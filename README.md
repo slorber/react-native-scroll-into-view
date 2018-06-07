@@ -4,7 +4,7 @@ Permit to scroll a ReactNative View into the visible screen.
 
 Simple port of DOMElement.scrollIntoView() function.
 
-For now there's only support for `ScrollView
+For now there's only support for `ScrollView`
 
 ```
 yarn add react-native-scroll-into-view
@@ -12,11 +12,13 @@ yarn add react-native-scroll-into-view
 npm install react-native-scroll-into-view --save
 ```
 
-# API
+There is **no native code**. This library is compatible with Expo.
+
+# Basic usage
 
 ```js
 import React from "react";
-import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
+import {Text, View, Button, ScrollView} from 'react-native';
 import {ScrollIntoView, ScrollIntoViewWrapper, ScrollIntoViewConsumer} from "react-native-scroll-into-view";
 
 
@@ -33,6 +35,12 @@ class MyScreen extends React.Component {
         <ScrollIntoView>
           <Text>
             This will scroll into view on mount
+          </Text>
+        </ScrollIntoView>
+        
+        <ScrollIntoView animated={false}>
+          <Text>
+            This will scroll into view on mount without any animation
           </Text>
         </ScrollIntoView>
         
@@ -76,6 +84,17 @@ class MyScreen extends React.Component {
   }
 }
 ```
+
+
+
+# API:
+
+The ES6 named exports are:
+
+- `ScrollIntoViewWrapper`: HOC that wraps a `ScrollView` and exposes a scrollIntoView API as React context
+- `ScrollIntoView` is a container that reads the context and offer a basic declarative scrollIntoView API
+- `ScrollIntoViewConsumer` and `injectScrollIntoViewAPI`: permit to get imperative access to the parent `ScrollView` scrollIntoView API (can be useful if the default `ScrollIntoView` container API does not fit your needs)
+
 
 # Demos:
 
