@@ -255,8 +255,18 @@ class ScrollIntoViewBaseContainer extends React.Component {
     if (this.unmounted) {
       return;
     }
-    const options = {animated: this.props.animated};
-    this.props.scrollIntoViewAPI.scrollIntoView(this.container,options);
+    if ( this.props.scrollIntoViewAPI ) {
+      const options = {animated: this.props.animated};
+      this.props.scrollIntoViewAPI.scrollIntoView(this.container,options);
+    }
+    else {
+      this.warnNoProviderOnce();
+    }
+  };
+
+  warnNoProviderOnce = () => {
+    console.error("The ScrollIntoView provider has been been found in parent tree. Make sure to wrap your ScrollView with ScrollIntoViewWrapper");
+    this.warnNoProviderOnce = () => {};
   };
 
   render() {

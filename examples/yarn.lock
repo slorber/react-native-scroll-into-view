@@ -5608,9 +5608,9 @@ react-native-scripts@1.14.0:
     rimraf "^2.6.1"
     xdl "48.1.4"
 
-react-native-scroll-into-view@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-scroll-into-view/-/react-native-scroll-into-view-0.0.6.tgz#e0531435feb3e1bf9b8548da98448489ea13b722"
+react-native-scroll-into-view@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/react-native-scroll-into-view/-/react-native-scroll-into-view-0.0.7.tgz#83dd5093d2eec5d1d3bcbfbc7eafd31dff4704ac"
 
 react-native-svg-web@^1.0.1:
   version "1.0.1"
