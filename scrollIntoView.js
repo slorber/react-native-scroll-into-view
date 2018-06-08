@@ -9,6 +9,22 @@ const {
 } = React.createContext(null);
 
 
+
+// See https://codeburst.io/throttling-and-debouncing-in-javascript-b01cad5c8edf
+const throttle = (func, limit) => {
+  let inThrottle;
+  return function() {
+    const args = arguments;
+    const context = this
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit)
+    }
+  }
+};
+
+
 const defaultGetScrollPosition = (
   scrollViewLayout,
   viewLayout,
@@ -74,6 +90,38 @@ const scrollIntoView = async (scrollView, view, scrollY, options) => {
 };
 
 
+
+class ScrollIntoViewAPI {
+  constructor(scrollViewRef, getScrollY) {
+    if (!scrollViewRef) {
+      throw new Error("scrollViewRef is required");
+    }
+    if (!getScrollY) {
+      throw new Error("getScrollY is required");
+    }
+    this.scrollViewRef = scrollViewRef;
+    this.getScrollY = getScrollY;
+  }
+
+  get = () => {
+    if (!this.scrollViewRef.current) {
+      throw new Error("scrollViewRef not available, make sure to use CustomScrollView as a parent");
+    }
+    return this.scrollViewRef.current
+  };
+
+  // We throttle the calls, so that if 2 views where to scroll into view at almost the same time, only the first one will do
+  // ie if we want to scroll into view form errors, the first error will scroll into view
+  // this behavior is probably subjective and should be configurable?
+  scrollIntoView = throttle((view, options) => {
+    const scrollView = this.get();
+    const scrollY = this.getScrollY();
+    return scrollIntoView(scrollView, view, scrollY, options);
+  },50);
+}
+
+
+
 export const ScrollIntoViewWrapper = ScrollViewComp => {
   class ScrollIntoViewWrapper extends React.Component {
     static defaultProps = {
@@ -126,32 +174,6 @@ export const ScrollIntoViewWrapper = ScrollViewComp => {
   return ScrollIntoViewWrapper;
 };
 
-
-class ScrollIntoViewAPI {
-  constructor(scrollViewRef, getScrollY) {
-    if (!scrollViewRef) {
-      throw new Error("scrollViewRef is required");
-    }
-    if (!getScrollY) {
-      throw new Error("getScrollY is required");
-    }
-    this.scrollViewRef = scrollViewRef;
-    this.getScrollY = getScrollY;
-  }
-
-  get = () => {
-    if (!this.scrollViewRef.current) {
-      throw new Error("scrollViewRef not available, make sure to use CustomScrollView as a parent");
-    }
-    return this.scrollViewRef.current
-  };
-
-  scrollIntoView = (view, options) => {
-    const scrollView = this.get();
-    const scrollY = this.getScrollY();
-    return scrollIntoView(scrollView, view, scrollY, options);
-  };
-}
 
 export class ScrollIntoViewProvider extends React.Component {
   constructor(props) {
