@@ -44,6 +44,12 @@ class MyScreen extends React.Component {
           </Text>
         </ScrollIntoView>
         
+        <ScrollIntoView immediate={true}>
+          <Text>
+            This will not throttle scrollIntoView calls, as by default it does not make much sense to scroll into view multiple elements at the same time...
+          </Text>
+        </ScrollIntoView>
+        
         <ScrollIntoView enabled={false}>
           <Text>
             This will scroll into view whenever enabled becomes true
@@ -94,6 +100,7 @@ The ES6 named exports are:
 - `ScrollIntoViewWrapper`: HOC that wraps a `ScrollView` and exposes a scrollIntoView API as React context
 - `ScrollIntoView` is a container that reads the context and offer a basic declarative scrollIntoView API
 - `ScrollIntoViewConsumer` and `injectScrollIntoViewAPI`: permit to get imperative access to the parent `ScrollView` scrollIntoView API (can be useful if the default `ScrollIntoView` container API does not fit your needs)
+- `scrollIntoView`: imperative method to call yourself
 
 
 # Demos:
@@ -106,6 +113,22 @@ It is also [published on Expo](https://expo.io/@slorber/react-native-scroll-into
 ![Basic example](https://media.giphy.com/media/5YqZVwlJeISATCyTOI/giphy.gif)
 
 ![Scroll to next example](https://media.giphy.com/media/4KFxkZyoFfxPEOBw0S/giphy.gif)
+
+# Features:
+
+- Imperative API
+- Declarative component
+- Configurable HOC for advanced use-cases
+- Throttle scrollIntoView calls by default
+- Support for wrapped ScrollView (`react-native-keyboard-aware-scroll-view`, Glamorous-native...)
+- Support for `Animated.ScrollView` with native driver
+
+# TODOs:
+
+- Ability to provide custom screen offsets
+- Ability to scroll view into the center of the screen
+- Support IphoneX / SafeArea / insets...
+
 
 # License
 

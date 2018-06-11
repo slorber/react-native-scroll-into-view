@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {View, UIManager, findNodeHandle} from "react-native";
+import {Animated,View, UIManager, findNodeHandle} from "react-native";
 
 
 const {
@@ -66,7 +66,7 @@ const DefaultOptions = {
 };
 
 
-const scrollIntoView = async (scrollView, view, scrollY, options) => {
+export const scrollIntoView = async (scrollView, view, scrollY, options) => {
   const {
     animated,
     getScrollPosition,
@@ -92,75 +92,112 @@ const scrollIntoView = async (scrollView, view, scrollY, options) => {
 
 
 class ScrollIntoViewAPI {
-  constructor(scrollViewRef, getScrollY) {
-    if (!scrollViewRef) {
-      throw new Error("scrollViewRef is required");
+  constructor(getScrollView, getScrollY) {
+    if (!getScrollView) {
+      throw new Error("getScrollView is required");
     }
     if (!getScrollY) {
       throw new Error("getScrollY is required");
     }
-    this.scrollViewRef = scrollViewRef;
+    this.getScrollView = getScrollView;
     this.getScrollY = getScrollY;
   }
 
-  get = () => {
-    if (!this.scrollViewRef.current) {
-      throw new Error("scrollViewRef not available, make sure to use CustomScrollView as a parent");
-    }
-    return this.scrollViewRef.current
+  scrollIntoViewImmediate = (view, options) => {
+    const scrollView = this.getScrollView();
+    const scrollY = this.getScrollY();
+    return scrollIntoView(scrollView, view, scrollY, options);
   };
 
   // We throttle the calls, so that if 2 views where to scroll into view at almost the same time, only the first one will do
   // ie if we want to scroll into view form errors, the first error will scroll into view
   // this behavior is probably subjective and should be configurable?
   scrollIntoView = throttle((view, options) => {
-    const scrollView = this.get();
-    const scrollY = this.getScrollY();
-    return scrollIntoView(scrollView, view, scrollY, options);
-  },50);
+    return scrollIntoView(this.getScrollView(), view, this.getScrollY(), options);
+  }, 16);
+
+  scrollIntoViewImmediate = (view, options) => {
+    return scrollIntoView(this.getScrollView(), view, this.getScrollY(), options);
+  };
+
 }
 
 
 
-export const ScrollIntoViewWrapper = ScrollViewComp => {
+
+
+const ScrollIntoViewWrapperHOCDefaultConfig = {
+
+  // The ref propName to pass to the wrapped component
+  // If you use something like glamorous-native, you can use "innerRef" for example
+  refPropName: "ref",
+
+  // The method to extract the raw scrollview node from the ref we got, if it's not directly the scrollview itself
+  getScrollViewNode: ref => {
+    // getNode() permit to support Animated.ScrollView,
+    // see https://stackoverflow.com/questions/42051368/scrollto-is-undefined-on-animated-scrollview/48786374
+    if ( ref.getNode ) {
+      return ref.getNode();
+    }
+    else {
+      return ref;
+    }
+  },
+
+  // Default value for throttling, can be overriden by user
+  scrollEventThrottle: 16,
+
+};
+
+const ScrollIntoViewWrapperHOC = (ScrollViewComp,config = {}) => {
+
+  const {
+    refPropName,
+    getScrollViewNode,
+    scrollEventThrottle,
+  } = {
+    ...ScrollIntoViewWrapperHOCDefaultConfig,
+    ...config,
+  };
+
   class ScrollIntoViewWrapper extends React.Component {
-    static defaultProps = {
-      // in case you use a custom ScrollView implementation which use a ref prop like "innnerRef"...
-      refPropName: "ref",
-      scrollEventThrottle: 16,
-    };
 
     constructor(props) {
       super(props);
-      this.scrollViewRef = React.createRef();
+      this.ref = React.createRef();
       this.scrollY = this.props.contentOffset ? this.props.contentOffset.y : 0;
     }
 
     handleRef = ref => {
       // Temporary, see https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/263
-      this.scrollViewRef.current = ref;
+      this.ref.current = ref;
     };
 
     handleScroll = e => {
       this.scrollY = e.nativeEvent.contentOffset.y;
-      this.props.onScroll && this.props.onScroll(e);
     };
 
     getScrollY = () => this.scrollY;
 
+    getScrollView = () => getScrollViewNode(this.ref.current);
+
     render() {
       const {children, ...props} = this.props;
+
       const scrollViewProps = {
         ...props,
-        [this.props.refPropName]: this.handleRef,
-        onScroll: this.handleScroll,
+        [refPropName]: this.handleRef,
+        scrollEventThrottle: this.props.scrollEventThrottle || scrollEventThrottle,
+        // See https://github.com/facebook/react-native/issues/19623
+        onScroll: Animated.forkEvent(this.props.onScroll,this.handleScroll),
       };
+
       return (
         <ScrollViewComp
           {...scrollViewProps}
         >
           <ScrollIntoViewProvider
-            scrollViewRef={this.scrollViewRef}
+            getScrollView={this.getScrollView}
             getScrollY={this.getScrollY}
           >
             {children}
@@ -171,14 +208,25 @@ export const ScrollIntoViewWrapper = ScrollViewComp => {
   }
 
   ScrollIntoViewWrapper.displayName = `ScrollIntoViewWrapper(${ScrollViewComp.displayName || ScrollViewComp.name || 'Component'})`;
+
   return ScrollIntoViewWrapper;
+};
+
+
+export const ScrollIntoViewWrapper = configOrComp => {
+  if ( typeof configOrComp === "object" ) {
+    return Comp => ScrollIntoViewWrapperHOC(Comp,configOrComp);
+  }
+  else {
+    return ScrollIntoViewWrapperHOC(configOrComp);
+  }
 };
 
 
 export class ScrollIntoViewProvider extends React.Component {
   constructor(props) {
     super(props);
-    this.api = new ScrollIntoViewAPI(props.scrollViewRef, props.getScrollY);
+    this.api = new ScrollIntoViewAPI(props.getScrollView, props.getScrollY);
   }
 
   render() {
@@ -216,10 +264,14 @@ class ScrollIntoViewBaseContainer extends React.Component {
     scrollIntoViewKey: PropTypes.string,
     // weither to use animation to scroll into view the element
     animated: PropTypes.bool.isRequired,
+    // by default, calls are throttled because you can only scroll into view one element at a time
+    immediate: PropTypes.bool.isRequired,
   };
+
   static defaultProps = {
     enabled: true,
     animated: true,
+    immediate: false,
   };
 
   constructor(props) {
@@ -255,18 +307,13 @@ class ScrollIntoViewBaseContainer extends React.Component {
     if (this.unmounted) {
       return;
     }
-    if ( this.props.scrollIntoViewAPI ) {
-      const options = {animated: this.props.animated};
-      this.props.scrollIntoViewAPI.scrollIntoView(this.container,options);
+    const options = {animated: this.props.animated};
+    if ( this.props.immediate ) {
+      this.props.scrollIntoViewAPI.scrollIntoViewImmediate(this.container,options);
     }
     else {
-      this.warnNoProviderOnce();
+      this.props.scrollIntoViewAPI.scrollIntoView(this.container,options);
     }
-  };
-
-  warnNoProviderOnce = () => {
-    console.error("The ScrollIntoView provider has been been found in parent tree. Make sure to wrap your ScrollView with ScrollIntoViewWrapper");
-    this.warnNoProviderOnce = () => {};
   };
 
   render() {
