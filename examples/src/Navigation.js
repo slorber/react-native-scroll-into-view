@@ -5,9 +5,7 @@ import ScrollToNextScreen from "screens/ScrollToNext";
 import HomeScreen from "screens/Home";
 
 
-
-
-export default createStackNavigator(
+const Navigation = createStackNavigator(
   {
     Home: {
       screen: HomeScreen
@@ -23,6 +21,9 @@ export default createStackNavigator(
     initialRouteName: "Basic",
   },
 );
+
+
+export default Navigation;
 
 
 
