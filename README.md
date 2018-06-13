@@ -12,7 +12,10 @@ yarn add react-native-scroll-into-view
 npm install react-native-scroll-into-view --save
 ```
 
-There is **no native code**. This library is compatible with Expo.
+There is **no native code** and this library is compatible with Expo.
+
+[![expo](https://avatars2.githubusercontent.com/u/12504344?v=3&s=100 "Expo.io")](https://expo.io)
+
 
 # Basic usage
 
