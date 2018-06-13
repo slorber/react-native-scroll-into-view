@@ -17,20 +17,42 @@ There is **no native code**. This library is compatible with Expo.
 # Basic usage
 
 ```js
-import React from "react";
-import {Text, View, Button, ScrollView} from 'react-native';
-import {ScrollIntoView, ScrollIntoViewWrapper, ScrollIntoViewConsumer} from "react-native-scroll-into-view";
+
+// Available options
+const scrollIntoViewOptions = {
+  
+  // Animate the scrollIntoView() operation 
+  animated: true,
+  
+  // By default, scrollIntoView() calls are throttled a bit because it does not make much sense
+  // to scrollIntoView() 2 elements at the same time (and sometimes even impossible)
+  immediate: false,
+  
+  // Permit to add top/bottom insets so that element scrolled into view 
+  // is not touching directly the borders of the scrollview (like a padding)
+  insets: {
+    top: 0,
+    bottom: 0
+  },
+  
+  // Advanced: use these options as escape hatch if the lib default functions do not satisfy your needs
+  getScrollPosition: (scrollViewLayout,viewLayout,scrollY,insets) => { },
+  measureElement: (viewRef) => { },
+};
 
 
-// Wrap the original ScrollView into the HOC (also accept custom ScrollView implementations)
+
+// Wrap the original ScrollView into the HOC
 const CustomScrollView = ScrollIntoViewWrapper(ScrollView);
-
 
 
 class MyScreen extends React.Component {
   render() {
     return (
-      <CustomScrollView>
+      <CustomScrollView 
+        // Can provide default options (overrideable)
+        scrollIntoViewOptions={scrollIntoViewOptions}
+      >
 
         <ScrollIntoView>
           <Text>
@@ -61,6 +83,12 @@ class MyScreen extends React.Component {
             This will scroll into view whenever scrollIntoViewKey changes
           </Text>
         </ScrollIntoView>
+        
+        <ScrollIntoView scrollIntoViewOptions={options}>
+          <Text>
+            This will scroll into view on mount with custom option props
+          </Text>
+        </ScrollIntoView>
 
         <View>
           <ScrollIntoView enabled={false} ref={ref => this.scrollIntoViewRef = ref}>
@@ -69,8 +97,8 @@ class MyScreen extends React.Component {
             </Text>
           </ScrollIntoView>
           <Button
-            title="Make above text scroll into view"
-            onPress={() => this.scrollIntoViewRef.scrollIntoView()}
+            title="Make above text scroll into view with custom options"
+            onPress={() => this.scrollIntoViewRef.scrollIntoView(scrollIntoViewOptions)}
           />
         </View>
 
@@ -79,7 +107,7 @@ class MyScreen extends React.Component {
             <View ref={ref => this.myView = ref}>
               <Button
                 title="Make current view scroll into view"
-                onPress={scrollIntoViewAPI.scrollIntoView(this.myView)}
+                onPress={scrollIntoViewAPI.scrollIntoView(this.myView,scrollIntoViewOptions)}
               />
             </View>
           )}
@@ -91,6 +119,19 @@ class MyScreen extends React.Component {
 }
 ```
 
+You can also configure the HOC:
+
+```js
+const CustomScrollView = ScrollIntoViewWrapper({
+  // These are needed if you need use a ScrollView wrapper that does not use React.forwardRef()
+  refPropName: "innerRef",
+  getScrollViewNode: ref => ref.getInstance();
+  // fallback value for throttling, can be overriden by user with props
+  scrollEventThrottle: 16,
+  // ScrollIntoView default options
+  options: scrollIntoViewOptions,
+})(ScrollView);
+```
 
 
 # API:
@@ -109,26 +150,32 @@ You can run the examples folder as an Expo app with `yarn start`
 
 It is also [published on Expo](https://expo.io/@slorber/react-native-scroll-into-view)
 
-
 ![Basic example](https://media.giphy.com/media/5YqZVwlJeISATCyTOI/giphy.gif)
 
+![Basic insets example](https://media.giphy.com/media/ZxbG056VseF0cuJUHW/giphy.gif)
+
 ![Scroll to next example](https://media.giphy.com/media/4KFxkZyoFfxPEOBw0S/giphy.gif)
+
 
 # Features:
 
 - Imperative API
 - Declarative component
-- Configurable HOC for advanced use-cases
-- Throttle scrollIntoView calls by default
+- Configuration at many levels
 - Support for wrapped ScrollView (`react-native-keyboard-aware-scroll-view`, Glamorous-native...)
 - Support for `Animated.ScrollView` with native driver
 
+
 # TODOs:
 
-- Ability to provide custom screen offsets
 - Ability to scroll view into the center of the screen
 - Support horizontal scrollview
 
+# Contribute
+
+Contributions are welcome and PRs will be merged rapidly.
+ 
+If your changes are impactful, please open an issue first.
 
 # License
 

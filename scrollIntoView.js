@@ -68,13 +68,17 @@ const defaultMeasureElement = async (element) => {
 
 const DefaultOptions = {
   animated: true,
-  getScrollPosition: defaultGetScrollPosition,
-  measureElement: defaultMeasureElement,
+  immediate: false,
   insets: {
     top: 0,
     bottom: 0
   },
+  getScrollPosition: defaultGetScrollPosition,
+  measureElement: defaultMeasureElement,
 };
+
+const OptionKeys = Object.keys(DefaultOptions);
+
 
 const normalizeOptions = (options = {},fallbackOptions = DefaultOptions) => ({
   ...fallbackOptions,
@@ -83,7 +87,7 @@ const normalizeOptions = (options = {},fallbackOptions = DefaultOptions) => ({
     ...fallbackOptions.insets,
     ...options.insets,
   },
-})
+});
 
 
 export const scrollIntoView = async (scrollView, view, scrollY, options) => {
@@ -135,7 +139,7 @@ class ScrollIntoViewAPI {
     else {
       this.scrollIntoViewThrottled(view,normalizedOptions);
     }
-  }
+  };
 
   // We throttle the calls, so that if 2 views where to scroll into view at almost the same time, only the first one will do
   // ie if we want to scroll into view form errors, the first error will scroll into view
@@ -339,17 +343,17 @@ class ScrollIntoViewBaseContainer extends React.Component {
   }
 
   getPropsOptions = () => {
-    // It's important to ONLY include used options here because we want to fallback in order:
-    // - to parent provider options
-    // - and only then to default options
-    const options = {};
-    if (typeof this.props.animated !== "undefined") {
-      options.animated = this.props.animated;
-    }
-    if (typeof this.props.immediate !== "undefined") {
-      options.immediate = this.props.immediate;
-    }
-    return options;
+    const options = {
+      ...this.props.scrollIntoViewOptions,
+    };
+    // Allow option shortcuts like animated={true}
+    OptionKeys.forEach(optionKey => {
+      const optionValue = this.props[optionKey];
+      if ( typeof optionValue !== "undefined" ) {
+        options[optionKey] = optionValue;
+      }
+    });
+    return options
   };
 
   scrollIntoView = (providedOptions) => {
