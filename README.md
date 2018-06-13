@@ -127,7 +127,7 @@ It is also [published on Expo](https://expo.io/@slorber/react-native-scroll-into
 
 - Ability to provide custom screen offsets
 - Ability to scroll view into the center of the screen
-- Support IphoneX / SafeArea / insets...
+- Support horizontal scrollview
 
 
 # License
