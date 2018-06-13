@@ -2,9 +2,7 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {ScrollIntoView} from "react-native-scroll-into-view";
 import {Button, Centered, ScrollIntoViewScrollView} from "components/Components";
-
-const range = n => [...Array(n).keys()];
-
+import {range} from "lodash";
 
 class ScrollToNextScreen extends React.Component {
   static navigationOptions = {

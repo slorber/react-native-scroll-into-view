@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Animated,View, UIManager, findNodeHandle} from "react-native";
 
-
 const {
   Provider: ReactProvider,
   Consumer: ReactConsumer
@@ -25,10 +24,14 @@ const throttle = (func, limit) => {
 };
 
 
+
+
+
 const defaultGetScrollPosition = (
   scrollViewLayout,
   viewLayout,
-  scrollY
+  scrollY,
+  insets,
 ) => {
   const scrollViewHeight = scrollViewLayout.height;
   const childHeight = viewLayout.height;
@@ -36,18 +39,22 @@ const defaultGetScrollPosition = (
   const childTopY = viewLayout.y - scrollViewLayout.y;
   const childBottomY = childTopY + childHeight;
   // ChildView top is above ScrollView: align child top to scrollview top
-  if (childTopY < 0) {
-    return (scrollY + childTopY)
+  if (childTopY < (0 + insets.top) ) {
+    return (scrollY + childTopY - insets.top)
   }
   // ChildView bottom is under ScrollView: align child bottom to scroll
-  else if (childBottomY > scrollViewHeight) {
-    return (scrollY + childBottomY - scrollViewHeight)
+  else if (childBottomY > scrollViewHeight - insets.bottom) {
+    return (scrollY + childBottomY - scrollViewHeight + insets.bottom)
   }
   // In other cases, let scroll position unchanged
   else {
     return (scrollY)
   }
 };
+
+
+
+
 
 const defaultMeasureElement = async (element) => {
   const node = findNodeHandle(element);
@@ -63,18 +70,29 @@ const DefaultOptions = {
   animated: true,
   getScrollPosition: defaultGetScrollPosition,
   measureElement: defaultMeasureElement,
+  insets: {
+    top: 0,
+    bottom: 0
+  },
 };
+
+const normalizeOptions = (options = {},fallbackOptions = DefaultOptions) => ({
+  ...fallbackOptions,
+  ...options,
+  insets: {
+    ...fallbackOptions.insets,
+    ...options.insets,
+  },
+})
 
 
 export const scrollIntoView = async (scrollView, view, scrollY, options) => {
   const {
     animated,
     getScrollPosition,
-    measureElement
-  } = {
-    ...DefaultOptions,
-    ...options
-  };
+    measureElement,
+    insets,
+  } = normalizeOptions(options);
 
   const [
     scrollViewLayout,
@@ -84,7 +102,7 @@ export const scrollIntoView = async (scrollView, view, scrollY, options) => {
     measureElement(view),
   ]);
 
-  const y = getScrollPosition(scrollViewLayout, viewLayout, scrollY);
+  const y = getScrollPosition(scrollViewLayout, viewLayout, scrollY, insets);
 
   scrollView.getScrollResponder().scrollResponderScrollTo({x: 0, y, animated});
 };
@@ -92,34 +110,42 @@ export const scrollIntoView = async (scrollView, view, scrollY, options) => {
 
 
 class ScrollIntoViewAPI {
-  constructor(getScrollView, getScrollY) {
+  constructor(getScrollView, getScrollY, getDefaultOptions) {
     if (!getScrollView) {
       throw new Error("getScrollView is required");
     }
     if (!getScrollY) {
       throw new Error("getScrollY is required");
     }
+    if (!getDefaultOptions) {
+      throw new Error("getDefaultOptions is required");
+    }
     this.getScrollView = getScrollView;
     this.getScrollY = getScrollY;
+    this.getDefaultOptions = getDefaultOptions;
   }
 
-  scrollIntoViewImmediate = (view, options) => {
-    const scrollView = this.getScrollView();
-    const scrollY = this.getScrollY();
-    return scrollIntoView(scrollView, view, scrollY, options);
-  };
+  getNormalizedOptions = (options) => normalizeOptions(options,this.getDefaultOptions());
+
+  scrollIntoView = (view, options) => {
+    const normalizedOptions = this.getNormalizedOptions(options);
+    if ( normalizedOptions.immediate ) {
+      this.scrollIntoViewImmediate(view,normalizedOptions);
+    }
+    else {
+      this.scrollIntoViewThrottled(view,normalizedOptions);
+    }
+  }
 
   // We throttle the calls, so that if 2 views where to scroll into view at almost the same time, only the first one will do
   // ie if we want to scroll into view form errors, the first error will scroll into view
   // this behavior is probably subjective and should be configurable?
-  scrollIntoView = throttle((view, options) => {
+  scrollIntoViewThrottled = throttle((view, options) => {
     return scrollIntoView(this.getScrollView(), view, this.getScrollY(), options);
   }, 16);
-
   scrollIntoViewImmediate = (view, options) => {
     return scrollIntoView(this.getScrollView(), view, this.getScrollY(), options);
   };
-
 }
 
 
@@ -127,11 +153,9 @@ class ScrollIntoViewAPI {
 
 
 const ScrollIntoViewWrapperHOCDefaultConfig = {
-
   // The ref propName to pass to the wrapped component
   // If you use something like glamorous-native, you can use "innerRef" for example
   refPropName: "ref",
-
   // The method to extract the raw scrollview node from the ref we got, if it's not directly the scrollview itself
   getScrollViewNode: ref => {
     // getNode() permit to support Animated.ScrollView,
@@ -143,11 +167,18 @@ const ScrollIntoViewWrapperHOCDefaultConfig = {
       return ref;
     }
   },
-
-  // Default value for throttling, can be overriden by user
+  // Default value for throttling, can be overriden by user with props
   scrollEventThrottle: 16,
-
+  // ScrollIntoView options, can be offeriden by <ScrollIntoView> comp or imperative usage
+  options: DefaultOptions,
 };
+
+const normalizeHOCConfig = (config = {},fallbackConfig = ScrollIntoViewWrapperHOCDefaultConfig) => ({
+  ...ScrollIntoViewWrapperHOCDefaultConfig,
+  ...fallbackConfig,
+  options: normalizeOptions(config.options,fallbackConfig.options),
+});
+
 
 const ScrollIntoViewWrapperHOC = (ScrollViewComp,config = {}) => {
 
@@ -155,10 +186,9 @@ const ScrollIntoViewWrapperHOC = (ScrollViewComp,config = {}) => {
     refPropName,
     getScrollViewNode,
     scrollEventThrottle,
-  } = {
-    ...ScrollIntoViewWrapperHOCDefaultConfig,
-    ...config,
-  };
+    options,
+  } = normalizeHOCConfig(config);
+
 
   class ScrollIntoViewWrapper extends React.Component {
 
@@ -181,6 +211,8 @@ const ScrollIntoViewWrapperHOC = (ScrollViewComp,config = {}) => {
 
     getScrollView = () => getScrollViewNode(this.ref.current);
 
+    getDefaultOptions = () => normalizeOptions(this.props.scrollIntoViewOptions,options);
+
     render() {
       const {children, ...props} = this.props;
 
@@ -199,6 +231,7 @@ const ScrollIntoViewWrapperHOC = (ScrollViewComp,config = {}) => {
           <ScrollIntoViewProvider
             getScrollView={this.getScrollView}
             getScrollY={this.getScrollY}
+            getDefaultOptions={this.getDefaultOptions}
           >
             {children}
           </ScrollIntoViewProvider>
@@ -211,6 +244,8 @@ const ScrollIntoViewWrapperHOC = (ScrollViewComp,config = {}) => {
 
   return ScrollIntoViewWrapper;
 };
+
+
 
 
 export const ScrollIntoViewWrapper = configOrComp => {
@@ -226,7 +261,7 @@ export const ScrollIntoViewWrapper = configOrComp => {
 export class ScrollIntoViewProvider extends React.Component {
   constructor(props) {
     super(props);
-    this.api = new ScrollIntoViewAPI(props.getScrollView, props.getScrollY);
+    this.api = new ScrollIntoViewAPI(props.getScrollView, props.getScrollY, props.getDefaultOptions);
   }
 
   render() {
@@ -303,17 +338,29 @@ class ScrollIntoViewBaseContainer extends React.Component {
     this.unmounted = true;
   }
 
-  scrollIntoView = () => {
+  getPropsOptions = () => {
+    // It's important to ONLY include used options here because we want to fallback in order:
+    // - to parent provider options
+    // - and only then to default options
+    const options = {};
+    if (typeof this.props.animated !== "undefined") {
+      options.animated = this.props.animated;
+    }
+    if (typeof this.props.immediate !== "undefined") {
+      options.immediate = this.props.immediate;
+    }
+    return options;
+  };
+
+  scrollIntoView = (providedOptions) => {
     if (this.unmounted) {
       return;
     }
-    const options = {animated: this.props.animated};
-    if ( this.props.immediate ) {
-      this.props.scrollIntoViewAPI.scrollIntoViewImmediate(this.container,options);
-    }
-    else {
-      this.props.scrollIntoViewAPI.scrollIntoView(this.container,options);
-    }
+    const options = {
+      ...this.getPropsOptions(),
+      ...providedOptions,
+    };
+    this.props.scrollIntoViewAPI.scrollIntoView(this.container,options);
   };
 
   render() {

@@ -18,7 +18,7 @@ const Navigation = createStackNavigator(
     },
   },
   {
-    initialRouteName: "Basic",
+    //initialRouteName: "Basic",
   },
 );
 
