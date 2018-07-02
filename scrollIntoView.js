@@ -301,6 +301,10 @@ export const injectScrollIntoViewAPI = WrappedComp => {
   ));
 };
 
+const showNotInContextWarning = throttle(() => {
+  console.warn("ScrollIntoView API is not provided in React context. Make sure you wrapped your ScrollView with ScrollIntoViewWrapper");
+},5000);
+
 
 class ScrollIntoViewBaseContainer extends React.Component {
 
@@ -324,6 +328,16 @@ class ScrollIntoViewBaseContainer extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  ensureApiProvided = () => {
+    if (this.props.scrollIntoViewAPI) {
+      return true;
+    }
+    else {
+      showNotInContextWarning();
+      return false;
+    }
+  };
 
   componentDidMount() {
     // see https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/259#issuecomment-392863157
@@ -368,11 +382,13 @@ class ScrollIntoViewBaseContainer extends React.Component {
     if (this.unmounted) {
       return;
     }
-    const options = {
-      ...this.getPropsOptions(),
-      ...providedOptions,
-    };
-    this.props.scrollIntoViewAPI.scrollIntoView(this.container,options);
+    if ( this.ensureApiProvided() ) {
+      const options = {
+        ...this.getPropsOptions(),
+        ...providedOptions,
+      };
+      this.props.scrollIntoViewAPI.scrollIntoView(this.container,options);
+    }
   };
 
   render() {
