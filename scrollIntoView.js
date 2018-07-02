@@ -204,8 +204,15 @@ const ScrollIntoViewWrapperHOC = (ScrollViewComp,config = {}) => {
     }
 
     handleRef = ref => {
-      // Temporary, see https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/263
       this.ref.current = ref;
+      if (this.props.innerRef) {
+        if ( typeof this.props.innerRef.current !== 'undefined' ) {
+          this.props.innerRef.current = ref;
+        }
+        else {
+          this.props.innerRef(ref);
+        }
+      }
     };
 
     handleScroll = e => {

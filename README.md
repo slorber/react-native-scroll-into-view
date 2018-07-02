@@ -136,6 +136,8 @@ const CustomScrollView = ScrollIntoViewWrapper({
 })(ScrollView);
 ```
 
+`CustomScrollView` also accept a `innerRef` prop if you need to access the scrollview node this way.
+
 
 # API:
 
