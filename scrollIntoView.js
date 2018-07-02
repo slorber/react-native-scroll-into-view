@@ -180,6 +180,7 @@ const ScrollIntoViewWrapperHOCDefaultConfig = {
 const normalizeHOCConfig = (config = {},fallbackConfig = ScrollIntoViewWrapperHOCDefaultConfig) => ({
   ...ScrollIntoViewWrapperHOCDefaultConfig,
   ...fallbackConfig,
+  ...config,
   options: normalizeOptions(config.options,fallbackConfig.options),
 });
 
