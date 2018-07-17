@@ -317,12 +317,18 @@ class ScrollIntoViewBaseContainer extends React.Component {
     animated: PropTypes.bool.isRequired,
     // by default, calls are throttled because you can only scroll into view one element at a time
     immediate: PropTypes.bool.isRequired,
+    // scroll into view on mount (if enabled)
+    onMount: PropTypes.bool.isRequired,
+    // scroll into view on update (if enabled)
+    onUpdate: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
     enabled: true,
     animated: true,
     immediate: false,
+    onMount: true,
+    onUpdate: true,
   };
 
   constructor(props) {
@@ -342,19 +348,19 @@ class ScrollIntoViewBaseContainer extends React.Component {
   componentDidMount() {
     // see https://github.com/APSL/react-native-keyboard-aware-scroll-view/issues/259#issuecomment-392863157
     setTimeout(() => {
-      this.props.enabled && this.scrollIntoView();
+      this.props.onMount && this.props.enabled && this.scrollIntoView();
     }, 0);
   }
 
   componentDidUpdate(prevProps) {
     const hasBeenEnabled = this.props.enabled && !prevProps.enabled;
-    if (hasBeenEnabled) {
+    if (this.props.onUpdate && hasBeenEnabled) {
       this.scrollIntoView();
       return;
     }
     // Allow to pass a "scrollIntoViewKey" so that
     const keyHasChanged = this.props.scrollIntoViewKey !== prevProps.scrollIntoViewKey;
-    if (this.props.enabled && keyHasChanged) {
+    if (this.props.onUpdate && this.props.enabled && keyHasChanged) {
       this.scrollIntoView();
       return;
     }

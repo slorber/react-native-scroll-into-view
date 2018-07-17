@@ -87,6 +87,12 @@ class MyScreen extends React.Component {
           </Text>
         </ScrollIntoView>
         
+        <ScrollIntoView onMount={false} onUpdate={true} scrollIntoViewKey="some string">
+          <Text>
+            This will scroll into on update (if it becomes enabled, or key changes)
+          </Text>
+        </ScrollIntoView>
+        
         <ScrollIntoView scrollIntoViewOptions={options}>
           <Text>
             This will scroll into view on mount with custom option props
