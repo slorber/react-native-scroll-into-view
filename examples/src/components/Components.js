@@ -21,6 +21,9 @@ export const Centered = ({style, ...props}) => (
 );
 
 export const ScrollIntoViewScrollView = ScrollIntoViewWrapper(ScrollView);
+ScrollIntoViewScrollView.defaultProps = {
+  keyboardShouldPersistTaps: "handled",
+};
 
 
 
