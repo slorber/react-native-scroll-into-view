@@ -1,10 +1,8 @@
 # react-native-scroll-into-view
 
-Permit to scroll a ReactNative View into the visible screen. 
+Permit to scroll a ReactNative View into the visible portion of the screen (`ScrollView`). 
 
-Simple port of DOMElement.scrollIntoView() function.
-
-For now there's only support for `ScrollView`
+Simple port of DOMElement.scrollIntoView() function, with some extra useful features.
 
 ```
 yarn add react-native-scroll-into-view
@@ -26,6 +24,9 @@ The integration with form libraries like [Formik](https://github.com/jaredpalmer
 
 ![Formik integration](https://i.imgur.com/EuBhuKg.png)
 
+-  By default, the first error field of the form will reveal itself
+- `enabled={!!error}` means we'll only scroll into view fields that have an error
+- `scrollIntoViewKey={submitCount}` means we'll scroll into view fields which still have errors on every Formik submit attempt (`submitCount` is provided by Formik)
 
 
 # Basic usage
