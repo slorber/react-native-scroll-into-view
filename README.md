@@ -16,6 +16,17 @@ There is **no native code** and this library is compatible with Expo.
 
 [![expo](https://avatars2.githubusercontent.com/u/12504344?v=3&s=100 "Expo.io")](https://expo.io)
 
+# Why ?
+
+The main usecase that drives the creation of library is to ensure form errors become visible to the user as they appear. This is particularly useful on long scrollable forms, which sometimes can't be avoided by better UX.
+
+![Formik example](https://media.giphy.com/media/1j8PXENzl0jEdRDWnT/giphy.gif)
+
+The integration with form libraries like [Formik](https://github.com/jaredpalmer/formik) and Redux-form is very simple (see [Formik example](https://github.com/slorber/react-native-scroll-into-view/blob/master/examples/src/screens/FormikScreen.js))
+
+![Formik integration](https://i.imgur.com/EuBhuKg.png)
+
+
 
 # Basic usage
 
@@ -167,6 +178,7 @@ It is also [published on Expo](https://expo.io/@slorber/react-native-scroll-into
 
 ![Scroll to next example](https://media.giphy.com/media/4KFxkZyoFfxPEOBw0S/giphy.gif)
 
+![Formik example](https://media.giphy.com/media/1j8PXENzl0jEdRDWnT/giphy.gif)
 
 # Features:
 

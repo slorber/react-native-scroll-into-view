@@ -110,34 +110,31 @@ class FormikScreen extends React.Component {
               values,
               touched,
               errors,
-                submitCount,
-            }) => {
-              console.debug('values', values);
-              return (
-                <View>
-                  {Fields.map((field, i) => (
-                    <FormFieldWithScrollIntoView
-                      style={{ marginTop: i > 0 ? 50 : 0 }}
-                      key={field.id}
-                      field={field}
-                      value={values[field.id]}
-                      onChangeText={handleChange(field.id)}
-                      onBlur={handleBlur(field.id)}
-                      error={touched[field.id] ? errors[field.id] : undefined}
-                      submitCount={submitCount}
-                    />
-                  ))}
-                  <Centered>
-                    <Button
-                      style={{ marginTop: 100, marginBottom: 100 }}
-                      onPress={submitForm}
-                    >
-                      Submit form
-                    </Button>
-                  </Centered>
-                </View>
-              );
-            }}
+              submitCount,
+            }) => (
+              <View>
+                {Fields.map((field, i) => (
+                  <FormFieldWithScrollIntoView
+                    style={{ marginTop: i > 0 ? 50 : 0 }}
+                    key={field.id}
+                    field={field}
+                    value={values[field.id]}
+                    onChangeText={handleChange(field.id)}
+                    onBlur={handleBlur(field.id)}
+                    error={touched[field.id] ? errors[field.id] : undefined}
+                    submitCount={submitCount}
+                  />
+                ))}
+                <Centered>
+                  <Button
+                    style={{ marginTop: 100, marginBottom: 100 }}
+                    onPress={submitForm}
+                  >
+                    Submit form
+                  </Button>
+                </Centered>
+              </View>
+            )}
           </Formik>
         </ScrollIntoViewScrollView>
       </KeyboardAvoidingView>
