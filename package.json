@@ -29,5 +29,8 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
+  },
+  "devDependencies": {
+    "prettier": "^1.13.7"
   }
 }

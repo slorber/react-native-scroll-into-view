@@ -312,7 +312,11 @@ class ScrollIntoViewBaseContainer extends React.Component {
     // if enabled, will scrollIntoView on mount + on update (if it was previously disabled)
     enabled: PropTypes.bool.isRequired,
     // if enabled, will scrollIntoView on key change
-    scrollIntoViewKey: PropTypes.string,
+    scrollIntoViewKey: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.bool,
+    ]),
     // weither to use animation to scroll into view the element
     animated: PropTypes.bool.isRequired,
     // by default, calls are throttled because you can only scroll into view one element at a time
