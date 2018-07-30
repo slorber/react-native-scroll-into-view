@@ -21,7 +21,7 @@ const Navigation = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Formik',
+    // initialRouteName: 'Formik',
   },
 );
 
