@@ -206,3 +206,8 @@ If your changes are impactful, please open an issue first.
 MIT
 
 Some code is inspired from contribution of @sebasgarcep of an initial scrollIntoView support for https://github.com/APSL/react-native-keyboard-aware-scroll-view
+
+# Hire a freelance expert
+
+Looking for a React/ReactNative freelance expert with more than 5 years production experience?
+Contact me from my [website](https://sebastienlorber.com/) or with [Twitter](https://twitter.com/sebastienlorber).
