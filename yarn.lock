@@ -654,14 +654,15 @@
     pouchdb-collections "^1.0.1"
     tiny-queue "^0.2.1"
 
-"@types/expo@31.0.0":
-  version "31.0.0"
-  resolved "https://registry.yarnpkg.com/@types/expo/-/expo-31.0.0.tgz#42883ad84bac86a6724c70c90d1eea87522d7a00"
-  integrity sha512-Vh0knEueN595AKi6Grk73A2RATjslz2EpazY0FslQTzwmWNEY2PTqdgbWU/SXvdu7zXPmqD9DKjWGRhruwU39Q==
+"@types/expo@31.0.9":
+  version "31.0.9"
+  resolved "https://registry.yarnpkg.com/@types/expo/-/expo-31.0.9.tgz#8b5f4328b2f5da57e1268375e307cb14fde4b2db"
+  integrity sha512-9RM9ZpZVrIEKAHFOea4D3F4B/fSSIWS51Sx7A/TJ/aqAP5rcvGZVtZWtdJURv6ovTZTx5vUMoNQl9vztLvdhKA==
   dependencies:
     "@types/fbemitter" "*"
     "@types/react" "*"
     "@types/react-native" "*"
+    react-native-maps "*"
 
 "@types/fbemitter@*", "@types/fbemitter@^2.0.32":
   version "2.0.32"
@@ -4413,7 +4414,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2:
+prop-types@>=15.6.1, prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
   integrity sha512-3pboPvLiWD7dkI3qf3KbUe6hKFKa52w+AE0VCqECtf+QHAKgOL37tTaNCnuX1nAAQ4ZhyP+kYVKf8rLmJ/feDQ==
@@ -4495,7 +4496,12 @@ react-native-gesture-handler@1.0.9:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
-"react-native-maps@github:expo/react-native-maps#v0.22.1-exp.0":
+react-native-maps@*:
+  version "0.23.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.23.0.tgz#edbfdcad0e42190627eb1c8067eaba5965c8f81e"
+  integrity sha512-qxOIQGsDtQXQlSJdXMW1wg8pvLaVYdbiIolB7tZTTgTGgIA/hDxXwZbQZ08c4KDD6/VTk8krfd1APaHkqvh6og==
+
+react-native-maps@expo/react-native-maps#v0.22.1-exp.0:
   version "0.22.1"
   resolved "https://codeload.github.com/expo/react-native-maps/tar.gz/e6f98ff7272e5d0a7fe974a41f28593af2d77bb2"
 
