@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { ScrollIntoView } from 'scrollIntoView';
 import { ScrollIntoViewScrollView } from '../components/Components';
 import { range } from 'lodash';
@@ -19,7 +15,7 @@ class SectionsScreen extends React.Component<{}> {
   sectionsRefs = Sections.map(_section => React.createRef<any>());
 
   scrollSectionIntoView = (section: number) => {
-    this.sectionsRefs[section].current!.scrollIntoView();
+    this.sectionsRefs[section].current!.scrollIntoView({ align: 'top' });
   };
 
   renderSectionButton = (section: number) => {
@@ -30,16 +26,24 @@ class SectionsScreen extends React.Component<{}> {
         style={{
           alignItems: 'center',
           justifyContent: 'center',
-          width: 40,
-          height: 40,
-          marginTop: 15,
-          backgroundColor: 'white',
-          borderWidth: 1,
-          borderColor: 'darkgrey',
-          borderRadius: 20,
+          width: 50,
+          height: 50,
         }}
       >
-        <Text>{section}</Text>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 40,
+            height: 40,
+            backgroundColor: 'white',
+            borderWidth: 1,
+            borderColor: 'darkgrey',
+            borderRadius: 20,
+          }}
+        >
+          <Text>{section}</Text>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -48,6 +52,8 @@ class SectionsScreen extends React.Component<{}> {
     <ScrollIntoView
       key={section}
       ref={this.sectionsRefs[section]}
+      onMount={false}
+      onUpdate
       style={{
         width: '100%',
         padding: 10,
@@ -88,6 +94,7 @@ class SectionsScreen extends React.Component<{}> {
             height: '100%',
             backgroundColor: 'white',
             alignItems: 'center',
+            paddingTop: 15,
           }}
         >
           {Sections.map(this.renderSectionButton)}
@@ -100,6 +107,7 @@ class SectionsScreen extends React.Component<{}> {
           contentContainerStyle={{
             width: '100%',
             padding: 10,
+            backgroundColor: 'white',
           }}
         >
           {Sections.map(this.renderSection)}

@@ -1,41 +1,47 @@
 import React from 'react';
-import {
-  ScrollView,
-} from 'react-native';
+import { ScrollView } from 'react-native';
 import { measureElement } from './utils';
 import { computeScrollY } from './computeScrollY';
 
-
 export type Insets = {
-    top: number,
-    bottom: number,
-}
+  top: number;
+  bottom: number;
+};
+
+export type Align = 'auto' | 'top' | 'bottom' | 'center';
 
 export type FullOptions = {
-  animated: boolean,
-  immediate: boolean,
-  insets: Insets,
-  getScrollPosition: typeof computeScrollY,
-  measureElement: typeof measureElement,
-}
+  align: Align;
+  animated: boolean;
+  immediate: boolean;
+  insets: Insets;
+  computeScrollY: typeof computeScrollY;
+  measureElement: typeof measureElement;
+};
 
-export type PartialOptions = Partial<FullOptions>
+export type PartialOptions = Partial<FullOptions>;
 
 export const DefaultOptions: FullOptions = {
+  align: 'auto',
   animated: true,
   immediate: false,
   insets: {
     top: 0,
     bottom: 0,
   },
-  getScrollPosition: computeScrollY,
+  computeScrollY: computeScrollY,
   measureElement: measureElement,
 };
 
-export type OptionKey = keyof FullOptions
-export const OptionKeys: OptionKey[] = Object.keys(DefaultOptions) as OptionKey[];
+export type OptionKey = keyof FullOptions;
+export const OptionKeys: OptionKey[] = Object.keys(
+  DefaultOptions,
+) as OptionKey[];
 
-export const normalizeOptions = (options: PartialOptions = {}, fallbackOptions: FullOptions = DefaultOptions) => ({
+export const normalizeOptions = (
+  options: PartialOptions = {},
+  fallbackOptions: FullOptions = DefaultOptions,
+) => ({
   ...fallbackOptions,
   ...options,
   insets: {
@@ -44,16 +50,13 @@ export const normalizeOptions = (options: PartialOptions = {}, fallbackOptions: 
   },
 });
 
-
-
 export type FullHOCConfig = {
-  refPropName: string,
-  getScrollViewNode: (scrollView: ScrollView) => ScrollView
-  scrollEventThrottle: 16,
-  options: PartialOptions,
-}
-export type PartialHOCConfig = Partial<FullHOCConfig>
-
+  refPropName: string;
+  getScrollViewNode: (scrollView: ScrollView) => ScrollView;
+  scrollEventThrottle: 16;
+  options: PartialOptions;
+};
+export type PartialHOCConfig = Partial<FullHOCConfig>;
 
 export const DefaultHOCConfig: FullHOCConfig = {
   // The ref propName to pass to the wrapped component
@@ -77,11 +80,8 @@ export const DefaultHOCConfig: FullHOCConfig = {
   options: DefaultOptions,
 };
 
-export const normalizeHOCConfig = (
-  config: PartialHOCConfig = {},
-) => ({
+export const normalizeHOCConfig = (config: PartialHOCConfig = {}) => ({
   ...DefaultHOCConfig,
   ...config,
   options: normalizeOptions(config.options, DefaultOptions),
 });
-

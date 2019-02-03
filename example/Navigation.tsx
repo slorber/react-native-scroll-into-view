@@ -47,7 +47,7 @@ const Navigation = createStackNavigator(
     },
   },
   {
-    initialRouteName: 'Sections',
+    // initialRouteName: 'Sections',
   },
 );
 
