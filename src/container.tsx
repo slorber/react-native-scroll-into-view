@@ -1,7 +1,7 @@
-import React, { ComponentClass} from 'react';
+import React, { ComponentClass, ForwardRefExoticComponent, PropsWithoutRef, RefAttributes } from 'react';
 import PropTypes from 'prop-types';
 import {
-  View,
+  View, ViewProps,
 } from 'react-native';
 import { throttle } from './utils';
 import { PartialOptions, OptionKeys,
@@ -26,9 +26,10 @@ type ContainerProps = {
   onUpdate: boolean
   scrollIntoViewOptions: PartialOptions
   scrollIntoViewAPI: ScrollIntoViewAPI
-} & PartialOptions
+} & PartialOptions & ViewProps
 
-class Container extends React.Component<ContainerProps> {
+class ContainerBase extends React.Component<ContainerProps> {
+
 
   static propTypes = {
     // if enabled, will scrollIntoView on mount + on update (if it was previously disabled)
@@ -48,6 +49,7 @@ class Container extends React.Component<ContainerProps> {
     // scroll into view on update (if enabled)
     onUpdate: PropTypes.bool.isRequired,
   };
+
 
   container = React.createRef<View>();
 
@@ -136,6 +138,8 @@ class Container extends React.Component<ContainerProps> {
   }
 }
 
-export const ScrollIntoView = injectAPI(
-  Container as ComponentClass<Partial<ContainerProps>>,
+type PartialContainerProps = Partial<ContainerProps>
+
+export const Container = injectAPI(
+  ContainerBase as ComponentClass<PartialContainerProps>,
 );

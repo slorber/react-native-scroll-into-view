@@ -1,4 +1,4 @@
-import React, { ComponentClass, ComponentType, LegacyRef } from 'react';
+import React, { ComponentClass } from 'react';
 import { ScrollIntoViewAPI, ScrollIntoViewDependencies } from './api';
 
 const {
@@ -6,8 +6,8 @@ const {
   Consumer: ReactConsumer,
 } = React.createContext<ScrollIntoViewAPI>(null as any);
 
-// TODO better TS typings
-export const injectAPI = <T extends {}>(WrappedComp: ComponentClass<T>) : ComponentType<T> => {
+// TODO better TS typings?
+export const injectAPI = <T extends {}>(WrappedComp: ComponentClass<T>) => {
   return React.forwardRef((props: T, ref) => (
     <ReactConsumer>
       {(scrollIntoViewAPI: ScrollIntoViewAPI) => (
@@ -19,18 +19,12 @@ export const injectAPI = <T extends {}>(WrappedComp: ComponentClass<T>) : Compon
         />
       )}
     </ReactConsumer>
-  )) as ComponentType<T>;
+  ));
 };
 
 
 export class ProvideAPI extends React.Component<{dependencies: ScrollIntoViewDependencies}> {
-
-  api: ScrollIntoViewAPI;
-  constructor(props: ProvideAPI['props']) {
-    super(props);
-    this.api = new ScrollIntoViewAPI(this.props.dependencies);
-  }
-
+  api = new ScrollIntoViewAPI(this.props.dependencies);
   render() {
     return (
       <ReactProvider value={this.api}>{this.props.children}</ReactProvider>

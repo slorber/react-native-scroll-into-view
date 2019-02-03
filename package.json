@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "description": "React-Native port of DOMElement.scrollIntoView() web function, for ScrollView",
   "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "typings": "build/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/slorber/react-native-scroll-into-view.git"
@@ -49,16 +49,24 @@
     "@types/expo": "31.0.9",
     "@types/react": "^16.7.7",
     "@types/react-native": "^0.57.13",
+    "@types/react-navigation": "^3.0.1",
+    "@types/yup": "^0.26.7",
     "babel-core": "^7.0.0-bridge.0",
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-preset-expo": "^5.0.0",
     "concurrently": "^4.0.1",
-    "expo": "^31.0.2",
+    "expo": "^32.0.0",
+    "formik": "^1.0.1",
+    "jest-expo": "^32.0.0",
     "json": "^9.0.6",
+    "lodash": "^4.17.10",
     "prettier": "^1.15.2",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-navigation": "^2.2.3",
+    "react-test-renderer": "16.3.1",
     "rimraf": "^2.6.2",
-    "typescript": "^3.1.6"
+    "typescript": "^3.1.6",
+    "yup": "^0.26.10"
   }
 }
