@@ -1,9 +1,9 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { Button, Centered } from 'components/Components';
+import { Button, Centered } from '../components/Components';
 
 
-class HomeScreen extends React.Component {
+class HomeScreen extends React.Component<{navigation: {navigate: any}}> {
   static navigationOptions = {
     title: 'Home',
   };
