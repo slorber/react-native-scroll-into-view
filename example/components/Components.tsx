@@ -3,11 +3,12 @@ import {
   Text,
   View,
   TouchableOpacity,
-  ScrollView,
   Keyboard,
-  ViewProps, GestureResponderEvent,
+  ViewProps,
+  GestureResponderEvent,
 } from 'react-native';
-import { ScrollIntoView, wrapScrollView } from 'scrollIntoView';
+import { ScrollIntoView, wrapScrollViewConfigured } from 'scrollIntoView';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { isFunction } from 'lodash';
 
 export const dismissKeyboardWhenCalled = (
@@ -48,14 +49,16 @@ export const Button = ({
   </TouchableOpacity>
 );
 
-export const Centered = ({ style, ...props }: ViewProps & {children?: ReactNode}) => (
+export const Centered = ({
+  style,
+  ...props
+}: ViewProps & { children?: ReactNode }) => (
   <View
     style={[{ alignItems: 'center', justifyContent: 'center' }, style]}
     {...props}
   />
 );
 
-export const ScrollIntoViewScrollView = wrapScrollView(ScrollView);
-ScrollIntoViewScrollView.defaultProps = {
-  keyboardShouldPersistTaps: 'handled',
-};
+export const ScrollIntoViewScrollView = wrapScrollViewConfigured({
+  refPropName: 'innerRef',
+})(KeyboardAwareScrollView);
