@@ -1,8 +1,6 @@
 # react-native-scroll-into-view
 
-Permit to scroll a ReactNative View into the visible portion of the screen (`ScrollView`). 
-
-Simple port of DOMElement.scrollIntoView() function, with some extra useful features.
+Permit to scroll a ReactNative View into the visible portion of a `ScrollView`, similar to `DOMElement.scrollIntoView()` for web, with some extra useful features.
 
 ```
 yarn add react-native-scroll-into-view
@@ -20,13 +18,23 @@ The main usecase that drives the creation of library is to ensure form errors be
 
 ![Formik example](https://media.giphy.com/media/1j8PXENzl0jEdRDWnT/giphy.gif)
 
-The integration with form libraries like [Formik](https://github.com/jaredpalmer/formik) and Redux-form is very simple (see [Formik example](https://github.com/slorber/react-native-scroll-into-view/blob/master/examples/src/screens/FormikScreen.js))
+People have also used it to build a "sections index":
 
-![Formik integration](https://i.imgur.com/EuBhuKg.png)
+![Sections example](https://media.giphy.com/media/PPTRZRXzHFfOWVpogv/giphy.gif)
 
--  By default, the first error field of the form will reveal itself
-- `enabled={!!error}` means we'll only scroll into view fields that have an error
-- `scrollIntoViewKey={submitCount}` means we'll scroll into view fields which still have errors on every Formik submit attempt (`submitCount` is provided by Formik)
+But really you are free to build whatever you want with it
+
+# Features:
+
+- Declarative component
+- Imperative API
+- Configuration at many levels
+- Different alignment modes
+- Typescript definitions
+- Support for `Animated.ScrollView`
+- Support for composition/refs/other ScrollView wrappers (`react-native-keyboard-aware-scroll-view`, `glamorous-native`...)
+
+Note we don't plan to support anything else than ScrollView, because to compute the positions we need the elements to be rendered. Note that virtualized lists generally offer methods to scroll to a given index.
 
 
 # Basic usage
@@ -34,7 +42,14 @@ The integration with form libraries like [Formik](https://github.com/jaredpalmer
 ```js
 
 // Available options
-const scrollIntoViewOptions = {
+const options = {
+  
+  // auto: ensure element appears fully inside the view (if not already inside). It may align to top or bottom.
+  // top: align element to top
+  // bottom: align element to bottom
+  // center: align element at the center of the view
+  align: 'auto',
+ 
   
   // Animate the scrollIntoView() operation 
   animated: true,
@@ -50,16 +65,16 @@ const scrollIntoViewOptions = {
     bottom: 0
   },
   
-  // Advanced: use these options as escape hatch if the lib default functions do not satisfy your needs
-  getScrollPosition: (scrollViewLayout,viewLayout,scrollY,insets) => { },
+  // Advanced: use these options as escape hatches if the lib default functions do not satisfy your needs
+  computeScrollY: (scrollViewLayout,viewLayout,scrollY,insets, align) => { },
   measureElement: (viewRef) => { },
 };
 
 
 
 // Wrap the original ScrollView into the HOC
-const CustomScrollView = ScrollIntoViewWrapper(ScrollView);
-
+// Also works with Animated.ScrollView
+const CustomScrollView = wrapScrollView(ScrollView);
 
 class MyScreen extends React.Component {
   render() {
@@ -72,6 +87,12 @@ class MyScreen extends React.Component {
         <ScrollIntoView>
           <Text>
             This will scroll into view on mount
+          </Text>
+        </ScrollIntoView>
+        
+        <ScrollIntoView align="center">
+          <Text>
+            This will scroll into view on mount and will be centered
           </Text>
         </ScrollIntoView>
         
@@ -143,7 +164,7 @@ class MyScreen extends React.Component {
 You can also configure the HOC:
 
 ```js
-const CustomScrollView = ScrollIntoViewWrapper({
+const CustomScrollView = wrapScrollViewConfigured({
   // These are needed if you need use a ScrollView wrapper that does not use React.forwardRef()
   refPropName: "innerRef",
   getScrollViewNode: ref => ref.getInstance();
@@ -161,11 +182,8 @@ const CustomScrollView = ScrollIntoViewWrapper({
 
 The ES6 named exports are:
 
-- `ScrollIntoViewWrapper`: HOC that wraps a `ScrollView` and exposes a scrollIntoView API as React context
-- `ScrollIntoView` is a container that reads the context and offer a basic declarative scrollIntoView API
-- `ScrollIntoViewConsumer` and `injectScrollIntoViewAPI`: permit to get imperative access to the parent `ScrollView` scrollIntoView API (can be useful if the default `ScrollIntoView` container API does not fit your needs)
-- `scrollIntoView`: imperative method to call yourself
-
+- `wrapScrollView` / `wrapScrollViewConfigured`: HOC that wraps a `ScrollView` and exposes a scrollIntoView API as React context
+- `ScrollIntoView`, the component you generally use to make its children appear into the ScrollView
 
 # Demos:
 
@@ -179,21 +197,40 @@ It is also [published on Expo](https://expo.io/@slorber/react-native-scroll-into
 
 ![Scroll to next example](https://media.giphy.com/media/4KFxkZyoFfxPEOBw0S/giphy.gif)
 
+![Sections example](https://media.giphy.com/media/PPTRZRXzHFfOWVpogv/giphy.gif)
+
 ![Formik example](https://media.giphy.com/media/1j8PXENzl0jEdRDWnT/giphy.gif)
 
-# Features:
 
-- Imperative API
-- Declarative component
-- Configuration at many levels
-- Support for wrapped ScrollView (`react-native-keyboard-aware-scroll-view`, Glamorous-native...)
-- Support for `Animated.ScrollView` with native driver
+# Recipes
+
+
+## Using in forms:
+
+The integration with form libraries like [Formik](https://github.com/jaredpalmer/formik) and Redux-form is very simple (see [Formik example](https://github.com/slorber/react-native-scroll-into-view/blob/master/examples/src/screens/FormikScreen.js))
+
+![Formik integration](https://i.imgur.com/EuBhuKg.png)
+
+-  By default, the first error field of the form will reveal itself
+- `enabled={!!error}` means we'll only scroll into view fields that have an error
+- `scrollIntoViewKey={submitCount}` means we'll scroll into view fields which still have errors on every Formik submit attempt (`submitCount` is provided by Formik)
+
+## Using with `react-native-keyboard-aware-scroll-view`
+
+`KeyboardAwareScrollView` does not forward refs by default so we need to obtain ref by using the `innerRef` prop:
+ 
+```
+const ScrollIntoViewScrollView = wrapScrollViewConfigured({
+  refPropName: 'innerRef',
+})(KeyboardAwareScrollView);
+```
 
 
 # TODOs:
 
-- Ability to scroll view into the center of the screen
-- Support horizontal scrollview
+- Hooks api
+- Tests
+- Support horizontal ScrollView?
 
 # Contribute
 
@@ -205,7 +242,7 @@ If your changes are impactful, please open an issue first.
 
 MIT
 
-Some code is inspired from contribution of @sebasgarcep of an initial scrollIntoView support for https://github.com/APSL/react-native-keyboard-aware-scroll-view
+Some code is inspired from contribution of @sebasgarcep of an initial scrollIntoView support for [react-native-keyboard-aware-scroll-view](https://github.com/APSL/react-native-keyboard-aware-scroll-view)
 
 # Hire a freelance expert
 

@@ -63,3 +63,8 @@ typings/
 .idea
 
 *.iml
+
+
+build
+
+.expo

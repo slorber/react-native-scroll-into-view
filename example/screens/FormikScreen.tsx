@@ -1,17 +1,32 @@
 import React from 'react';
-import { Text, View, TextInput, KeyboardAvoidingView } from 'react-native';
+import {
+  Text,
+  View,
+  TextInput,
+  KeyboardAvoidingView,
+  Alert,
+} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { ScrollIntoView } from 'react-native-scroll-into-view';
+import { ScrollIntoView } from 'scrollIntoView';
 import {
   Button,
   Centered,
   ScrollIntoViewScrollView,
-} from 'components/Components';
+} from '../components/Components';
 import { range, mapValues, keyBy } from 'lodash';
+import { StringSchema } from 'yup';
+
+type Field = {
+  id: string;
+  label: string;
+  required: boolean;
+  initialValue: string;
+  validator: StringSchema;
+};
 
 // We generate some random form fields
-const Fields = range(0, 15).map(i => {
+const Fields: Field[] = range(0, 15).map(i => {
   const required = i % 3 === 1;
   //const initialValue = i % 5 === 0 ? 'prefilled value ' + i : '';
   const initialValue = '';
@@ -43,7 +58,15 @@ const ValidationSchema = () => {
   return Yup.object().shape(fieldsValidators);
 };
 
-const FormField = ({ style, field, value, error, onChangeText, onBlur }) => (
+const FormField = ({
+  style,
+  field,
+  error,
+  ...props
+}: React.ComponentProps<typeof TextInput> & {
+  field: Field;
+  error?: string;
+}) => (
   <View style={style}>
     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
       <Text>{field.label}</Text>
@@ -63,9 +86,7 @@ const FormField = ({ style, field, value, error, onChangeText, onBlur }) => (
         paddingHorizontal: 20,
         fontSize: 20,
       }}
-      onChangeText={onChangeText}
-      onBlur={onBlur}
-      value={value}
+      {...props}
     />
     {error && (
       <Text style={{ fontSize: 15, color: 'red', marginTop: 5 }}>{error}</Text>
@@ -73,7 +94,10 @@ const FormField = ({ style, field, value, error, onChangeText, onBlur }) => (
   </View>
 );
 
-const FormFieldWithScrollIntoView = ({ submitCount, ...props }) => (
+const FormFieldWithScrollIntoView = ({
+  submitCount,
+  ...props
+}: React.ComponentProps<typeof FormField> & { submitCount: number }) => (
   <ScrollIntoView enabled={!!props.error} scrollIntoViewKey={submitCount}>
     <FormField {...props} />
   </ScrollIntoView>
@@ -101,7 +125,7 @@ class FormikScreen extends React.Component {
           <Formik
             validationSchema={ValidationSchema}
             initialValues={FieldInitialValues}
-            onSubmit={() => alert('submit success')}
+            onSubmit={() => Alert.alert('submit success')}
           >
             {({
               handleChange,

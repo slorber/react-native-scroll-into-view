@@ -1,8 +1,12 @@
 import React from 'react';
-import {Text, View} from 'react-native';
-import {ScrollIntoView} from "react-native-scroll-into-view";
-import {Button, Centered, ScrollIntoViewScrollView} from "components/Components";
-import {range} from "lodash";
+import { Text, View } from 'react-native';
+import { ScrollIntoView } from 'scrollIntoView';
+import {
+  Button,
+  Centered,
+  ScrollIntoViewScrollView,
+} from '../components/Components';
+import { range } from 'lodash';
 
 class ScrollToNextScreen extends React.Component {
   static navigationOptions = {
@@ -18,44 +22,48 @@ class ScrollToNextScreen extends React.Component {
     return (this.state.currentItem + 1) % ScrollToNextScreen.itemsCount;
   };
 
-  isCurrentItem = index => this.state.currentItem === index;
+  isCurrentItem = (index: number) => this.state.currentItem === index;
 
   scrollToNext = () => {
-    this.setState({currentItem: this.getNextItem()});
+    this.setState({ currentItem: this.getNextItem() });
   };
 
   render() {
     return (
-      <View style={{flex: 1, width: "100%"}}>
-        <View style={{padding: 20, borderBottomWidth: 1, borderBottomColor: "black"}}>
+      <View style={{ flex: 1, width: '100%' }}>
+        <View
+          style={{
+            padding: 20,
+            borderBottomWidth: 1,
+            borderBottomColor: 'black',
+          }}
+        >
           <Button onPress={this.scrollToNext}>
             Scroll to next ({this.getNextItem()})
           </Button>
         </View>
-        <ScrollIntoViewScrollView
-          style={{flex: 1, width: "100%"}}
-          scrollIntoViewOptions={{insets: {top: 50, bottom: 50}}}
-        >
+        <ScrollIntoViewScrollView style={{ flex: 1, width: '100%' }}>
           {range(ScrollToNextScreen.itemsCount).map(index => (
             <Centered
               key={`Item_${index}`}
               style={{
                 marginTop: 800,
-                width: "100%",
+                width: '100%',
               }}
             >
               <ScrollIntoView
                 enabled={this.isCurrentItem(index)}
+                align="center"
                 style={{
                   width: 50,
                   height: 50,
                   borderRadius: 50,
-                  backgroundColor: "blue",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  backgroundColor: 'blue',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                <Text style={{color: "white"}}>{index}</Text>
+                <Text style={{ color: 'white' }}>{index}</Text>
               </ScrollIntoView>
             </Centered>
           ))}
