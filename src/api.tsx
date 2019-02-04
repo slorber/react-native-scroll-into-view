@@ -22,7 +22,7 @@ export const scrollIntoView = async (
     measureElement(view),
   ]);
 
-  const y = computeScrollY(
+  const newScrollY = computeScrollY(
     scrollViewLayout,
     viewLayout,
     scrollY,
@@ -33,7 +33,7 @@ export const scrollIntoView = async (
   scrollView
     .getScrollResponder()
     // @ts-ignore
-    .scrollResponderScrollTo({ x: 0, y, animated });
+    .scrollResponderScrollTo({ x: 0, y: newScrollY, animated });
 };
 
 type GetScrollView = () => ScrollView;
