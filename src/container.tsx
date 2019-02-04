@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode, ReactNodeArray } from 'react';
 import PropTypes from 'prop-types';
 import { View, ViewProps } from 'react-native';
 import { throttle } from './utils';
@@ -21,6 +21,7 @@ type ContainerProps = {
   onUpdate?: boolean;
   scrollIntoViewOptions?: PartialOptions;
   scrollIntoViewAPI?: ScrollIntoViewAPI;
+  children?: ReactNode | ReactNodeArray;
 } & PartialOptions &
   ViewProps;
 
