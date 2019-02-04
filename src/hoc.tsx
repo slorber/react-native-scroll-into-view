@@ -1,5 +1,4 @@
-import React, {
-  ComponentType, LegacyRef } from 'react';
+import React, { ComponentType, LegacyRef } from 'react';
 
 import {
   Animated,
@@ -7,25 +6,32 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
-import {  normalizeOptions, PartialHOCConfig, PartialOptions, normalizeHOCConfig,
-   } from './config';
+import {
+  normalizeOptions,
+  PartialHOCConfig,
+  PartialOptions,
+  normalizeHOCConfig,
+} from './config';
 import { ProvideAPI } from './context';
 import { ScrollIntoViewDependencies } from './api';
 
-type ScrollViewProps = React.ComponentProps<typeof ScrollView>
-type ScrollViewScrollEvent = NativeSyntheticEvent<NativeScrollEvent>
+type ScrollViewProps = React.ComponentProps<typeof ScrollView>;
+type ScrollViewScrollEvent = NativeSyntheticEvent<NativeScrollEvent>;
 
 type HOCProps = ScrollViewProps & {
-  scrollIntoViewOptions?: PartialOptions
-  scrollEventThrottle?: number
-  innerRef?: any // TODO
-  contentOffset?: number // TODO don't remember what this is for :s
-}
+  scrollIntoViewOptions?: PartialOptions;
+  scrollEventThrottle?: number;
+  innerRef?: any; // TODO
+  contentOffset?: number; // TODO don't remember what this is for :s
+};
 
-export type WrappableComponent = ComponentType<ScrollViewProps>
-export type WrappedComponent = ComponentType<HOCProps>
+export type WrappableComponent = ComponentType<ScrollViewProps>;
+export type WrappedComponent = ComponentType<HOCProps>;
 
-export const wrapScrollViewHOC = (ScrollViewComp: WrappableComponent, config: PartialHOCConfig = {}): WrappedComponent => {
+export const wrapScrollViewHOC = (
+  ScrollViewComp: WrappableComponent,
+  config: PartialHOCConfig = {},
+): WrappedComponent => {
   const {
     refPropName,
     getScrollViewNode,
@@ -33,12 +39,10 @@ export const wrapScrollViewHOC = (ScrollViewComp: WrappableComponent, config: Pa
     options,
   } = normalizeHOCConfig(config);
 
-
   class ScrollViewWrapper extends React.Component<HOCProps> {
-
     static displayName = `ScrollIntoViewWrapper(${ScrollViewComp.displayName ||
-    ScrollViewComp.name ||
-    'Component'})`;
+      ScrollViewComp.name ||
+      'Component'})`;
 
     ref: React.RefObject<ScrollView>;
     scrollY: number;
@@ -93,16 +97,13 @@ export const wrapScrollViewHOC = (ScrollViewComp: WrappableComponent, config: Pa
 
       return (
         <ScrollViewComp {...scrollViewProps}>
-          <ProvideAPI
-            dependencies={this.dependencies}
-          >
-            {children}
-          </ProvideAPI>
+          <ProvideAPI dependencies={this.dependencies}>{children}</ProvideAPI>
         </ScrollViewComp>
       );
     }
   }
 
-  return ScrollViewWrapper;
+  return React.forwardRef<ScrollViewWrapper, HOCProps>((props, ref) => (
+    <ScrollViewWrapper innerRef={ref} {...props} />
+  ));
 };
-
