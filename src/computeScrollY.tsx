@@ -46,11 +46,11 @@ export const computeScrollY = (
 export const computeScrollYAuto = (data: ComputationData): number => {
   const { scrollY } = data;
   const scrollYTop = computeScrollYTop(data);
-  if (scrollY < scrollYTop) {
+  if (scrollY > scrollYTop) {
     return scrollYTop;
   }
   const scrollYBottom = computeScrollYBottom(data);
-  if (scrollYBottom > scrollYBottom) {
+  if (scrollY < scrollYBottom) {
     return scrollYBottom;
   }
   return scrollY;
