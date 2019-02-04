@@ -30,6 +30,7 @@
     "start": "concurrently \"yarn run start:expo\" \"yarn run start:typecheck\"",
     "start:expo": "expo start",
     "start:typecheck": "tsc --noEmit --watch",
+    "publish:expo": "expo publish",
     "build": "tsc",
     "build:clear": "rimraf build",
     "prepublish": "yarn build && yarn configure:publish",
