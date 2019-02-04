@@ -42,10 +42,7 @@ class ScrollToNextScreen extends React.Component {
             Scroll to next ({this.getNextItem()})
           </Button>
         </View>
-        <ScrollIntoViewScrollView
-          style={{ flex: 1, width: '100%' }}
-          scrollIntoViewOptions={{ insets: { top: 50, bottom: 50 } }}
-        >
+        <ScrollIntoViewScrollView style={{ flex: 1, width: '100%' }}>
           {range(ScrollToNextScreen.itemsCount).map(index => (
             <Centered
               key={`Item_${index}`}
@@ -56,6 +53,7 @@ class ScrollToNextScreen extends React.Component {
             >
               <ScrollIntoView
                 enabled={this.isCurrentItem(index)}
+                align="center"
                 style={{
                   width: 50,
                   height: 50,
