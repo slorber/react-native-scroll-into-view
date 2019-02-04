@@ -141,20 +141,6 @@ class MyScreen extends React.Component {
             }
           />
         </View>
-
-        <ScrollIntoViewConsumer>
-          {scrollIntoViewAPI => (
-            <View ref={ref => (this.myView = ref)}>
-              <Button
-                title="Make current view scroll into view"
-                onPress={scrollIntoViewAPI.scrollIntoView(
-                  this.myView,
-                  scrollIntoViewOptions,
-                )}
-              />
-            </View>
-          )}
-        </ScrollIntoViewConsumer>
       </CustomScrollView>
     );
   }
@@ -183,7 +169,7 @@ All these hoc configurations can also be provided to the `CustomScrollView` as p
 
 # Demos:
 
-You can run the examples folder as an Expo app with `yarn start`
+You can run the example folder as an Expo app with `yarn start`
 
 It is also [published on Expo](https://expo.io/@slorber/react-native-scroll-into-view)
 
@@ -201,7 +187,7 @@ It is also [published on Expo](https://expo.io/@slorber/react-native-scroll-into
 
 ## Using in forms:
 
-The integration with form libraries like [Formik](https://github.com/jaredpalmer/formik) and Redux-form is very simple (see [Formik example](https://github.com/slorber/react-native-scroll-into-view/blob/master/examples/src/screens/FormikScreen.js))
+The integration with form libraries like [Formik](https://github.com/jaredpalmer/formik) and Redux-form is very simple (see [Formik example](https://github.com/slorber/react-native-scroll-into-view/blob/master/example/screens/FormikScreen.js))
 
 ![Formik integration](https://i.imgur.com/EuBhuKg.png)
 
