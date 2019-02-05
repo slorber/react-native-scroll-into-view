@@ -1,6 +1,6 @@
 {
   "name": "react-native-scroll-into-view",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "React-Native port of DOMElement.scrollIntoView() web function, for ScrollView",
   "main": "node_modules/expo/AppEntry.js",
   "types": "build/index.d.ts",
@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git+https://github.com/slorber/react-native-scroll-into-view.git"
   },
+  "files": [
+    "build"
+  ],
   "keywords": [
     "react-native",
     "react",
