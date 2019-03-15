@@ -187,7 +187,7 @@ It is also [published on Expo](https://expo.io/@slorber/react-native-scroll-into
 
 ## Using in forms:
 
-The integration with form libraries like [Formik](https://github.com/jaredpalmer/formik) and Redux-form is very simple (see [Formik example](https://github.com/slorber/react-native-scroll-into-view/blob/master/example/screens/FormikScreen.js))
+The integration with form libraries like [Formik](https://github.com/jaredpalmer/formik) and Redux-form is very simple (see [Formik example](https://github.com/slorber/react-native-scroll-into-view/blob/master/example/screens/FormikScreen.tsx))
 
 ![Formik integration](https://i.imgur.com/EuBhuKg.png)
 
