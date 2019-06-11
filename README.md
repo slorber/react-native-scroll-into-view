@@ -1,5 +1,10 @@
 # react-native-scroll-into-view
 
+[![NPM](https://img.shields.io/npm/dm/react-native-scroll-into-view.svg)](https://www.npmjs.com/package/react-native-scroll-into-view)
+[![Build Status](https://travis-ci.com/slorber/react-native-scroll-into-view.svg?branch=master)](https://travis-ci.com/slorber/react-native-scroll-into-view)
+
+
+
 Permit to scroll a ReactNative View into the visible portion of a `ScrollView`, similar to `DOMElement.scrollIntoView()` for web, with some extra useful features.
 
 ```
