@@ -1,11 +1,16 @@
 # react-native-scroll-into-view
 
+[https://twitter.com/sebastienlorber"><img src="https://img.shields.io/twitter/follow/sebastienlorber.svg?style=social" align="right" alt="Twitter Follow" /></a>
+
 [![NPM](https://img.shields.io/npm/dm/react-native-scroll-into-view.svg)](https://www.npmjs.com/package/react-native-scroll-into-view)
+[![NPM](https://img.shields.io/npm/v/react-native-scroll-into-view.svg?style=flat)](https://www.npmjs.com/package/react-native-scroll-into-view)
 [![Build Status](https://travis-ci.com/slorber/react-native-scroll-into-view.svg?branch=master)](https://travis-ci.com/slorber/react-native-scroll-into-view)
 
+[![Twitter Follow](https://img.shields.io/twitter/follow/sebastienlorber.svg?style=social)](https://twitter.com/sebastienlorber)
 
+Scroll a ReactNative View ref into the visible portion of a `ScrollView`.
 
-Permit to scroll a ReactNative View into the visible portion of a `ScrollView`, similar to `DOMElement.scrollIntoView()` for web, with some extra useful features.
+Similar to `DOMElement.scrollIntoView()` for web, with some extras.
 
 ```
 yarn add react-native-scroll-into-view
@@ -13,17 +18,17 @@ yarn add react-native-scroll-into-view
 npm install react-native-scroll-into-view --save
 ```
 
-There is **no native code** and this library is compatible with Expo.
+There is **no native code**: this library is compatible with Expo managed workflow.
 
 [![expo](https://avatars2.githubusercontent.com/u/12504344?v=3&s=100 'Expo.io')](https://expo.io)
 
 # Why ?
 
-The main usecase that drives the creation of library is to ensure form errors become visible to the user as they appear. This is particularly useful on long scrollable forms, which sometimes can't be avoided by better UX.
+On long scrollable forms, can ensure errors become visible to the user on submit:
 
 ![Formik example](https://media.giphy.com/media/1j8PXENzl0jEdRDWnT/giphy.gif)
 
-People have also used it to build a "sections index":
+Building some kind of "sections index":
 
 ![Sections example](https://media.giphy.com/media/PPTRZRXzHFfOWVpogv/giphy.gif)
 
@@ -31,16 +36,55 @@ But really you are free to build whatever you want with it
 
 # Features:
 
-- Declarative + imperative api
+- Declarative component API
+- Imperative hook API
 - Configurable at many levels
 - Different alignment modes
+- Insets
 - Typescript definitions
-- Hooks
 - Support for composition/refs/other ScrollView wrappers (`Animated.ScrollView`, `react-native-keyboard-aware-scroll-view`, `glamorous-native`...)
 
-Note we don't plan to support anything else than ScrollView, because to compute the positions we need the elements to be rendered. Note that virtualized lists generally offer methods to scroll to a given index.
+Note we don't plan to support anything else than ScrollView. Virtualized lists generally offer methods to scroll to a given index.
 
-# Simple example
+# Minimal hooks example
+
+```js
+import { View, Text, ScrollView } from 'react-native';
+import {
+  wrapScrollView,
+  useScrollIntoView,
+} from 'react-native-scroll-into-view';
+
+const CustomScrollView = wrapScrollView(ScrollView);
+
+function MyScreen() {
+  return (
+    <CustomScrollView>
+      <MyScreenContent />
+    </CustomScrollView>
+  );
+}
+
+function MyScreenContent() {
+  const scrollIntoView = useScrollIntoView();
+  const viewRef = useRef();
+  return (
+    <>
+      <Button onPress={() => scrollIntoView(viewRef.current)}>
+        Scroll a view ref into view
+      </Button>
+
+      <View style={{ height: 100000 }}>
+        <Text>Some long ScrollView content</Text>
+      </View>
+
+      <View ref={viewRef}>
+        <Text>Will be scrolled into view on button press</Text>
+      </View>
+    </>
+  );
+}
+```
 
 # API
 
@@ -103,7 +147,7 @@ function ScreenContent() {
     <>
       <Button
         onPress={() => {
-          scrollIntoView(viewRef, options);
+          scrollIntoView(viewRef.current, options);
         }}
       >
         Scroll a view ref into view

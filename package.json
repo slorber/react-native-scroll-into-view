@@ -1,6 +1,6 @@
 {
   "name": "react-native-scroll-into-view",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "React-Native port of DOMElement.scrollIntoView() web function, for ScrollView",
   "main": "node_modules/expo/AppEntry.js",
   "types": "build/index.d.ts",
