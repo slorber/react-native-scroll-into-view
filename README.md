@@ -1,11 +1,8 @@
 # react-native-scroll-into-view
 
-[https://twitter.com/sebastienlorber"><img src="https://img.shields.io/twitter/follow/sebastienlorber.svg?style=social" align="right" alt="Twitter Follow" /></a>
-
 [![NPM](https://img.shields.io/npm/dm/react-native-scroll-into-view.svg)](https://www.npmjs.com/package/react-native-scroll-into-view)
 [![NPM](https://img.shields.io/npm/v/react-native-scroll-into-view.svg?style=flat)](https://www.npmjs.com/package/react-native-scroll-into-view)
 [![Build Status](https://travis-ci.com/slorber/react-native-scroll-into-view.svg?branch=master)](https://travis-ci.com/slorber/react-native-scroll-into-view)
-
 [![Twitter Follow](https://img.shields.io/twitter/follow/sebastienlorber.svg?style=social)](https://twitter.com/sebastienlorber)
 
 Scroll a ReactNative View ref into the visible portion of a `ScrollView`.
