@@ -7,7 +7,7 @@ import {
   ViewProps,
   GestureResponderEvent,
 } from 'react-native';
-import { ScrollIntoView, wrapScrollViewConfigured } from 'scrollIntoView';
+import { ScrollIntoView, wrapScrollViewConfigured } from '../../src';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { isFunction } from 'lodash';
 

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { ScrollIntoView } from 'scrollIntoView';
+import { ScrollIntoView } from '../../src';
 import {
   Button,
   Centered,

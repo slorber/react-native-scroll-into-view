@@ -62,10 +62,10 @@ export class ScrollIntoViewAPI {
     this.dependencies = dependencies;
   }
 
-  getNormalizedOptions = (options: PartialOptions) =>
+  getNormalizedOptions = (options: PartialOptions = {}) =>
     normalizeOptions(options, this.dependencies.getDefaultOptions());
 
-  scrollIntoView = (view: View, options: PartialOptions) => {
+  scrollIntoView = (view: View, options?: PartialOptions) => {
     const normalizedOptions = this.getNormalizedOptions(options);
     if (normalizedOptions.immediate) {
       return this.scrollIntoViewImmediate(view, normalizedOptions);

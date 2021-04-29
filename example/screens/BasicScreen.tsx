@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { ScrollIntoView } from 'scrollIntoView';
+import { ScrollIntoView } from '../../src';
 import {
   Button,
   Centered,

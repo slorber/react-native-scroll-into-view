@@ -35,9 +35,12 @@ But really you are free to build whatever you want with it
 - Configurable at many levels
 - Different alignment modes
 - Typescript definitions
+- Hooks
 - Support for composition/refs/other ScrollView wrappers (`Animated.ScrollView`, `react-native-keyboard-aware-scroll-view`, `glamorous-native`...)
 
 Note we don't plan to support anything else than ScrollView, because to compute the positions we need the elements to be rendered. Note that virtualized lists generally offer methods to scroll to a given index.
+
+# Simple example
 
 # API
 
@@ -46,6 +49,7 @@ import {
   ScrollIntoView, // enhanced View container
   wrapScrollView, // simple wrapper, no config
   wrapScrollViewConfigured, // complex wrapper, takes a config
+  useScrollIntoView, // access hook for imperative usage
 } from 'react-native-scroll-into-view';
 
 // Available options with their default value
@@ -78,13 +82,49 @@ const options = {
 // Wrap the original ScrollView
 const CustomScrollView = wrapScrollView(ScrollView);
 
-class MyScreen extends React.Component {
+// Use the wrapped CustomScrollView as a replacement of ScrollView
+function MyScreen() {
+  return (
+    <CustomScrollView
+      // Can provide default options (overrideable)
+      scrollIntoViewOptions={scrollIntoViewOptions}
+    >
+      <ScreenContent />
+    </CustomScrollView>
+  );
+}
+
+// Implement ScreenContent (inner of the ScrollView) with the useScrollIntoView and refs
+function ScreenContent() {
+  const scrollIntoView = useScrollIntoView();
+  const viewRef = useRef();
+
+  return (
+    <>
+      <Button
+        onPress={() => {
+          scrollIntoView(viewRef, options);
+        }}
+      >
+        Scroll a view ref into view
+      </Button>
+
+      <View style={{ height: 100000 }}>
+        <Text>Some long ScrollView content</Text>
+      </View>
+
+      <View ref={viewRef}>
+        <Text>Will be scrolled into view on button press</Text>
+      </View>
+    </>
+  );
+}
+
+// Or implement ScreenContent (inner of the ScrollView) with class + declarative ScrollIntoView component
+class ScreenContent extends React.Component {
   render() {
     return (
-      <CustomScrollView
-        // Can provide default options (overrideable)
-        scrollIntoViewOptions={scrollIntoViewOptions}
-      >
+      <>
         <ScrollIntoView>
           <Text>This will scroll into view on mount</Text>
         </ScrollIntoView>
@@ -146,7 +186,7 @@ class MyScreen extends React.Component {
             }
           />
         </View>
-      </CustomScrollView>
+      </>
     );
   }
 }
@@ -212,13 +252,11 @@ const ScrollIntoViewScrollView = wrapScrollViewConfigured({
 
 # TODOs:
 
-- Hooks api
 - Tests
+- Universal/Web support
 - Support horizontal ScrollView?
 
 # Contribute
-
-Contributions are welcome and PRs will be merged rapidly.
 
 If your changes are impactful, please open an issue first.
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView , Platform} from 'react-native';
 import { measureElement } from './utils';
 import { computeScrollY } from './computeScrollY';
 
@@ -64,10 +64,13 @@ export const DefaultHOCConfig: FullHOCConfig = {
   refPropName: 'ref',
   // The method to extract the raw scrollview node from the ref we got, if it's not directly the scrollview itself
   getScrollViewNode: (scrollView: ScrollView) => {
+    // for animated components, ref.getNode() is deprecated since RN 0.62
+  // See https://github.com/facebook/react-native/commit/66e72bb4e00aafbcb9f450ed5db261d98f99f82a
+    const shouldCallGetNode = !Platform.constants || Platform.constants.reactNativeVersion.major === 0 && Platform.constants.reactNativeVersion.minor < 62;
     // getNode() permit to support Animated.ScrollView,
     // see https://stackoverflow.com/questions/42051368/scrollto-is-undefined-on-animated-scrollview/48786374
     // @ts-ignore
-    if (scrollView.getNode) {
+    if (scrollView.getNode && shouldCallGetNode) {
       // @ts-ignore
       return scrollView.getNode();
     } else {

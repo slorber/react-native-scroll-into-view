@@ -20,7 +20,10 @@ module.exports = function(api) {
         "root": [
           "./src",
           "example"
-        ]
+        ],
+        alias: {
+          "@lib": "./src/index.tsx",
+        },
       }],
     ],
   };

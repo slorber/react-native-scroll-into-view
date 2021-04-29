@@ -1,20 +1,21 @@
 import React from 'react';
 import { ScrollIntoViewAPI, ScrollIntoViewDependencies } from './api';
 
-const {
-  Provider,
-  Consumer,
-} = React.createContext<ScrollIntoViewAPI>(null as any);
+const Context = React.createContext<ScrollIntoViewAPI | null>(null);
 
+export default Context;
 
-export const APIConsumer = Consumer;
+export const APIConsumer = Context.Consumer;
 
-
-export class ProvideAPI extends React.Component<{dependencies: ScrollIntoViewDependencies}> {
+export class ProvideAPI extends React.Component<{
+  dependencies: ScrollIntoViewDependencies;
+}> {
   api = new ScrollIntoViewAPI(this.props.dependencies);
   render() {
     return (
-      <Provider value={this.api}>{this.props.children}</Provider>
+      <Context.Provider value={this.api}>
+        {this.props.children}
+      </Context.Provider>
     );
   }
 }

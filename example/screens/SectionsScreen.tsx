@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
-import { ScrollIntoView } from 'scrollIntoView';
+import { ScrollIntoView } from '../../src';
 import { ScrollIntoViewScrollView } from '../components/Components';
 import { range } from 'lodash';
 

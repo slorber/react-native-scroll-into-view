@@ -14,7 +14,10 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "declaration": true,
-    "lib": ["es6"],
+    "skipLibCheck": true,
+    "lib": [
+      "es6"
+    ],
     "typeRoots": [
       "./node_modules/@types",
       "./@types"
@@ -28,5 +31,6 @@
     "build",
     "node_modules",
     "example"
-  ]
+  ],
+  "extends": "expo/tsconfig.base"
 }

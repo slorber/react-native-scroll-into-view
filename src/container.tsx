@@ -8,7 +8,7 @@ import { APIConsumer } from './context';
 
 const showNotInContextWarning = throttle(() => {
   console.warn(
-    'ScrollIntoView API is not provided in React context. Make sure you wrapped your ScrollView with ScrollIntoViewWrapper',
+    'ScrollIntoView API is not provided in React context. Make sure you wrapped your ScrollView component with wrapScrollView(ScrollView)',
   );
 }, 5000);
 
@@ -100,6 +100,7 @@ export class ContainerBase extends React.Component<ContainerProps> {
     OptionKeys.forEach((optionKey: OptionKey) => {
       const optionValue = this.props[optionKey];
       if (typeof optionValue !== 'undefined') {
+        // @ts-ignore
         options[optionKey] = optionValue;
       }
     });
