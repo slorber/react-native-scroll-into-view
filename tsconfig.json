@@ -15,6 +15,7 @@
     "strictNullChecks": true,
     "declaration": true,
     "skipLibCheck": true,
+    "noEmit": false,
     "lib": [
       "es6"
     ],
