@@ -70,7 +70,7 @@ function MyScreenContent() {
       <Button onPress={() => scrollIntoView(viewRef.current)}>
         Scroll a view ref into view
       </Button>
-
+      // in android if the scroll is not working then add renderToHardwareTextureAndroid this to view
       <View style={{ height: 100000 }}>
         <Text>Some long ScrollView content</Text>
       </View>
