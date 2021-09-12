@@ -30,10 +30,12 @@ export const scrollIntoView = async (
     align,
   );
 
-  scrollView
-    .getScrollResponder()
-    // @ts-ignore
-    .scrollResponderScrollTo({ x: 0, y: newScrollY, animated });
+  const scrollResponder = scrollView.getScrollResponder();
+  if (scrollResponder.scrollResponderScrollTo != null) {
+    scrollResponder.scrollResponderScrollTo({ x: 0, y: newScrollY, animated });
+  } else {
+    scrollView.scrollTo({ x: 0, y: newScrollY, animated });
+  }
 };
 
 type GetScrollView = () => ScrollView;
