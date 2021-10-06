@@ -19,6 +19,16 @@ There is **no native code**: this library is compatible with Expo managed workfl
 
 [![expo](https://avatars2.githubusercontent.com/u/12504344?v=3&s=100 'Expo.io')](https://expo.io)
 
+--- 
+
+# Sponsor
+
+**[ThisWeekInReact.com](https://thisweekinreact.com)**: the best newsletter to stay up-to-date with the React ecosystem:
+
+[![ThisWeekInReact.com banner](https://user-images.githubusercontent.com/749374/136185889-ebdb67cd-ec78-4655-b88b-79a6c134acd2.png)](https://thisweekinreact.com)
+
+---
+
 # Why ?
 
 On long scrollable forms, can ensure errors become visible to the user on submit:
