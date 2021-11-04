@@ -68,7 +68,7 @@
     "lodash": "^4.17.10",
     "prettier": "^1.15.2",
     "react": "16.13.1",
-    "react-native": "0.63.4",
+    "react-native": "0.64.1",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.3",
     "react-navigation": "^4.4.4",
